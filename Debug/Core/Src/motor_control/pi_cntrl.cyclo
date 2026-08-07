@@ -1,0 +1,3 @@
+../Core/Src/motor_control/pi_cntrl.c:6:6:pi_cntrl_init	3
+../Core/Src/motor_control/pi_cntrl.c:26:6:pi_cntrl_reset	1
+../Core/Src/motor_control/pi_cntrl.c:33:7:pi_cntrl_process	5

@@ -1,0 +1,10 @@
+../Core/Src/motor_control/motor_control.c:56:13:periphs_layer_initializer	8	static
+../Core/Src/motor_control/motor_control.c:75:13:measurement_layer_initializer	80	static
+../Core/Src/motor_control/motor_control.c:113:13:control_layer_initializer	48	static
+../Core/Src/motor_control/motor_control.c:133:13:init_builtin_led	32	static
+../Core/Src/motor_control/motor_control.c:144:13:init_user_button	32	static
+../Core/Src/motor_control/motor_control.c:156:13:communication_task	48	static
+../Core/Src/motor_control/motor_control.c:184:13:motor_control_task	56	static
+../Core/Src/motor_control/motor_control.c:262:6:motor_control_initializer	8	static
+../Core/Src/motor_control/motor_control.c:282:6:EXTI15_10_IRQHandler	8	static
+../Core/Src/motor_control/motor_control.c:287:6:HAL_GPIO_EXTI_Callback	16	static

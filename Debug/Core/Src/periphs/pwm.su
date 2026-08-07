@@ -1,0 +1,11 @@
+../Core/Src/periphs/pwm.c:26:20:timer_start	16	static
+../Core/Src/periphs/pwm.c:31:20:timer_stop	16	static
+../Core/Src/periphs/pwm.c:36:20:timer_reset	16	static
+../Core/Src/periphs/pwm.c:42:20:timer_complementary_pwm_channel_enable	32	static
+../Core/Src/periphs/pwm.c:49:20:timer_master_channel_enable	16	static
+../Core/Src/periphs/pwm.c:61:6:pwm_init	168	static
+../Core/Src/periphs/pwm.c:176:6:pwm_start	8	static
+../Core/Src/periphs/pwm.c:186:6:pwm_stop	8	static
+../Core/Src/periphs/pwm.c:195:6:pwm_set_duty_cycles	40	static
+../Core/Src/periphs/pwm.c:237:6:pwm_force_off	8	static
+../Core/Src/periphs/pwm.c:245:19:pwm_get_duty_cycles	32	static

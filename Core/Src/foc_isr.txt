@@ -1,0 +1,71 @@
+
+#include <math.h>
+#include <stdint.h>
+#include "hal_pwm.h"
+#include "hal_adc.h"
+#include "mc_transforms.h"
+#include "mc_svm.h"
+
+/* ── Configuration for the spin check ── */
+#define FOC_VOLTAGE_CMD_V        1.0f   /* d-axis voltage (V) - small, safe */
+#define FOC_ELEC_FREQ_HZ         5.0f   /* electrical Hz - slow for first test */
+#define FOC_VBUS_NOMINAL_V       12.0f  /* assumed bus; later, measured */
+
+/* ── State shared between ISR and main (marked volatile) ── */
+volatile float    g_ia_amps, g_ib_amps, g_ic_amps;   /* for scope/telemetry */
+volatile float    g_theta_elec;                       /* 0..2π */
+volatile uint32_t g_isr_count;                        /* health indicator */
+
+/* Theta increment per ISR tick: 2π·f·Ts = 2π·f/F_pwm */
+static float s_theta_step;
+
+void foc_isr_init(void)
+{
+    s_theta_step = 2.0f * 3.14159265358979f * FOC_ELEC_FREQ_HZ / (float)PWM_FREQ_HZ;
+    g_theta_elec = 0.0f;
+    g_isr_count  = 0;
+}
+
+/*
+ * Called at PWM_FREQ_HZ (25 kHz) from ADC JEOS interrupt.
+ * Marked __attribute__((hot)) to bias compiler inlining and placement.
+ */
+void __attribute__((hot)) foc_isr(void)
+{
+    /* ── 1. Read phase currents (for logging/debug; unused in open loop) ── */
+    const int16_t iu_raw = hal_adc_read_iu_raw();
+    const int16_t iv_raw = hal_adc_read_iv_raw();
+    const int16_t iw_raw = hal_adc_read_iw_raw();
+
+    g_ia_amps = hal_adc_counts_to_amps(iu_raw);
+    g_ib_amps = hal_adc_counts_to_amps(iv_raw);
+    g_ic_amps = hal_adc_counts_to_amps(iw_raw);
+
+    /* ── 2. Advance electrical angle ── */
+    float theta = g_theta_elec + s_theta_step;
+    if (theta >= 2.0f * 3.14159265358979f) {
+        theta -= 2.0f * 3.14159265358979f;
+    }
+    g_theta_elec = theta;
+
+    /* ── 3. Open-loop voltage vector: Vd = const, Vq = 0 ──
+     * This produces a constant-amplitude rotating vector aligned with d-axis.
+     * Inverse Park gets us to αβ; SVM gets us to duties.
+     */
+    const float vd = FOC_VOLTAGE_CMD_V;
+    const float vq = 0.0f;
+
+    float sin_t, cos_t;
+    sin_t = sinf(theta);
+    cos_t = cosf(theta);
+
+    float valpha, vbeta;
+    mc_park_inv(vd, vq, sin_t, cos_t, &valpha, &vbeta);
+
+    float du, dv, dw;
+    mc_svm(valpha, vbeta, FOC_VBUS_NOMINAL_V, &du, &dv, &dw);
+
+    hal_pwm_set_duties(du, dv, dw);
+
+    ++g_isr_count;
+}

@@ -1,0 +1,5 @@
+../Core/Src/measurement/sliding_mode_observer.c:5:21:smo_sliding_function	3
+../Core/Src/measurement/sliding_mode_observer.c:25:6:smo_init	2
+../Core/Src/measurement/sliding_mode_observer.c:49:6:smo_process	1
+../Core/Src/measurement/sliding_mode_observer.c:79:6:smo_reset	1
+../Core/Src/measurement/sliding_mode_observer.c:90:15:smo_get_est_emfs	1
