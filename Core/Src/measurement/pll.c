@@ -19,8 +19,8 @@ void pll_process(pll_t* const instance, float emf_alpha_est, float emf_beta_est)
 {
     assert(instance != NULL);
 
-	float sin_value = sinf(emf_alpha_est);
-	float cos_value = cosf(emf_beta_est);
+	float sin_value = sinf(instance->theta_est);
+	float cos_value = cosf(instance->theta_est);
 
     // normalize EMF to remove amplitude dependency
     float mag = fabsf(emf_alpha_est) + fabsf(emf_beta_est) + 1e-6f;

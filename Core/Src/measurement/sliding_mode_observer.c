@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <numeric_constants.h>
 
-static inline float smo_sliding_function(smo_t* const instance, float est_err)
+static inline float sliding_function(sliding_mode_observer_t* const instance, float est_err)
 {
 	float retVal = 0.0f;
 
@@ -22,7 +22,7 @@ static inline float smo_sliding_function(smo_t* const instance, float est_err)
 }
 
 
-void smo_init(smo_t* const instance, const smo_cfg_t *cfg)
+void sliding_mode_observer_init(sliding_mode_observer_t* const instance, const sliding_mode_observer_cfg_t *cfg)
 {
 	assert(instance != NULL && cfg != NULL);
 
@@ -36,17 +36,25 @@ void smo_init(smo_t* const instance, const smo_cfg_t *cfg)
 	instance->g_emf_gain = cfg->g_emf_gain;
 	instance->boundary = cfg->boundary;
 	instance->inv_boundary = (1.0f / instance->boundary);
+	instance->ts = cfg->ts;
+	instance->inv_ts = 1.0f / instance->ts;
+	instance->omega_lpf_gain = cfg->omega_lpf_gain;
 
 	instance->i_alpha_est = 0.0f;
 	instance->i_beta_est = 0.0f;
 	instance->e_alpha_est = 0.0f;
 	instance->e_beta_est = 0.0f;
+	instance->theta_est = 0.0f;
+	instance->omega_est = 0.0f;
+
 	instance->i_alpha_error = 0.0f;
 	instance->i_beta_error = 0.0f;
+	instance->last_theta_est = 0.0f;
+	instance->emf_mag = 0.0f;
 }
 
 
-void smo_process(smo_t* const instance, float v_alpha, float v_beta,  float i_alpha, float i_beta)
+void sliding_mode_observer_process(sliding_mode_observer_t* const instance, float v_alpha, float v_beta,  float i_alpha, float i_beta)
 {
 	assert(instance != NULL);
 
@@ -57,8 +65,8 @@ void smo_process(smo_t* const instance, float v_alpha, float v_beta,  float i_al
 
 //========================================================================
 	// 2. Calculate and apply the sliding injection
-	float z_alpha = instance->k_sliding_gain * smo_sliding_function(instance, i_alpha_est_err);
-	float z_beta = instance->k_sliding_gain * smo_sliding_function(instance, i_beta_est_err);
+	float z_alpha = instance->k_sliding_gain * sliding_function(instance, i_alpha_est_err);
+	float z_beta = instance->k_sliding_gain * sliding_function(instance, i_beta_est_err);
 
 //========================================================================
 	// 3. ZOH-based, discrete-time current-observer
@@ -74,24 +82,94 @@ void smo_process(smo_t* const instance, float v_alpha, float v_beta,  float i_al
 	// 5. Save the previous state
 	instance->i_alpha_error = i_alpha_est_err;
 	instance->i_beta_error  = i_beta_est_err;
+
+
+//========================================================================
+	// 6. Estimate the rotor's electrical angle and -speed
+
+	instance->emf_mag = sqrtf(instance->e_alpha_est * instance->e_alpha_est + instance->e_beta_est * instance->e_beta_est);
+	if (instance->emf_mag > 500.0f)
+	{
+		instance->theta_est = atan2f(instance->e_beta_est, instance->e_alpha_est);
+
+		if (instance->omega_est > 0)
+		{
+			instance->theta_est = instance->theta_est - (CONSTANT_PI * ONE_BY_TWO);
+		}
+		else
+		{
+			instance->theta_est = instance->theta_est + (CONSTANT_PI * ONE_BY_TWO);
+		}
+
+		if (instance->theta_est < 0.0f)
+		{
+			instance->theta_est += CONSTANT_TWO_PI;
+		}
+		else if (instance->theta_est > CONSTANT_TWO_PI)
+		{
+			instance->theta_est -= CONSTANT_TWO_PI;
+		}
+
+
+		//CONSTRAIN_ANGLE_RAD_ZERO_TWO_PI(instance->theta_est);
+
+		float delta_theta = instance->theta_est - instance->last_theta_est;
+		if (delta_theta > CONSTANT_PI)
+		{
+			delta_theta -= CONSTANT_TWO_PI;
+		}
+		else if (delta_theta < -CONSTANT_PI)
+		{
+			delta_theta += CONSTANT_TWO_PI;
+		}
+
+		float omega_raw = delta_theta * instance->inv_ts;
+
+		instance->omega_est = (1.0f - instance->omega_lpf_gain) * instance->omega_est + omega_raw * instance->omega_lpf_gain;
+		instance->last_theta_est = instance->theta_est;
+	}
+
+
 }
 
-void smo_reset(smo_t* const instance)
+void sliding_mode_observer_reset(sliding_mode_observer_t* const instance)
 {
 	assert(instance != NULL);
-	instance->i_alpha_est 	= 0.0f;
-	instance->i_beta_est	= 0.0f;
-	instance->e_alpha_est  	= 0.0f;
-	instance->e_beta_est	= 0.0f;
-	instance->i_alpha_error = 0.0f;
-	instance->i_beta_error 	= 0.0f;
+	instance->i_alpha_est 		= 0.0f;
+	instance->i_beta_est		= 0.0f;
+	instance->e_alpha_est  		= 0.0f;
+	instance->e_beta_est		= 0.0f;
+	instance->i_alpha_error 	= 0.0f;
+	instance->i_beta_error 		= 0.0f;
+	instance->theta_est 		= 0.0f;
+	instance->last_theta_est	= 0.0f;
+	instance->omega_est 		= 0.0f;
+	instance->emf_mag 			= 0.0f;
+
 }
 
-smo_emf_est_t smo_get_est_emfs(smo_t* const instance)
+sliding_mode_observer_emf_est_t sliding_mode_observer_get_emfs(sliding_mode_observer_t* const instance)
 {
-	smo_emf_est_t retVal = {0};
-	retVal.e_alpha = instance->e_alpha_est;
-	retVal.e_beta = instance->e_beta_est;
+	sliding_mode_observer_emf_est_t retVal = {0};
+	retVal.emf_alfa = instance->e_alpha_est;
+	retVal.emf_beta = instance->e_beta_est;
 	return retVal;
 }
+
+float sliding_mode_observer_get_electrical_angle(sliding_mode_observer_t* const instance)
+{
+	assert(instance != NULL);
+	float ret_val = 0.0f;
+	ret_val = instance->theta_est;
+	return ret_val;
+}
+
+float sliding_mode_observer_get_electrical_speed(sliding_mode_observer_t* const instance)
+{
+	assert(instance != NULL);
+	float ret_val = 0.0f;
+	ret_val = instance->omega_est;
+	return ret_val;
+}
+
 

@@ -31,7 +31,7 @@ enum motor_controller_state {
 //========================================================================
 	// Measurement layer instances
 static current_measure_t curr_meas = {0};
-static smo_t smo = {0};
+static sliding_mode_observer_t smo = {0};
 static pll_t pll = {0};
 
 //========================================================================
@@ -47,7 +47,8 @@ static float theta = 0.0f;
 static uint32_t aligment_tick_counter = 0u;
 static float omega_open_loop = 0.0f;
 static float theta_open_loop = 0.0f;
-
+static float theta_error = 0.0f;
+static float target_rpm = 400.0f;
 //========================================================================
 	// Communication layer
 volatile bool foc_telemetry_ready = false;
@@ -87,17 +88,18 @@ static void measurement_layer_initializer(void)
 	current_measure_init(&curr_meas, &curr_meas_cfg);
 
 //========================================================================
-	// Sliding-mode observer initialization
-	smo_cfg_t smo_cfg = {
-			.rs = MOTOR_RESISTANCE_MOHM,
-			.ls = MOTOR_INDUCTANE_MHENRY,
-			.ts = 1.0f / (float_t)PWM_FREQ_HZ,
-			.boundary = 150.0f,
-		    .k_sliding_gain = 50.0f,
-		    .g_emf_gain = 0.05f
 
+	sliding_mode_observer_cfg_t smo_cfg = {
+		.rs = MOTOR_RESISTANCE_MOHM,
+		.ls = MOTOR_INDUCTANCE_MHENRY,
+		.ts = 1.0f / (float_t)PWM_FREQ_HZ,
+		.boundary = 150.0f,
+		.k_sliding_gain = 50.0f,
+	    .g_emf_gain = 0.085f,
+		.omega_lpf_gain = 0.035
 	};
-	smo_init(&smo, &smo_cfg);
+
+	sliding_mode_observer_init(&smo, &smo_cfg);
 
 //========================================================================
 	// Phase-locked-loop initialization
@@ -105,7 +107,7 @@ static void measurement_layer_initializer(void)
 			.kp = 30.0f,
 		    .ki = 600.0f,
 		    .ts =  1.0f / (float_t)PWM_FREQ_HZ,
-		    .omega_max = 1200.0f,
+		    .omega_max = 4000.0f,
 	};
 	pll_init(&pll, &pll_cfg);
 }
@@ -162,20 +164,31 @@ static void communication_task(mc_callback_param_t param)
 		uart_comm_sw_delay = 0u;
 
 		current_measure_act_curr_t curr_abc = current_measure_get_currents(&curr_meas);
-		smo_emf_est_t emf_alpha_beta = smo_get_est_emfs(&smo);
-		float theta_pll = pll_get_est_theta(&pll);
-		float omega_pll = pll_get_est_omega(&pll);
+		sliding_mode_observer_emf_est_t emf_alpha_beta = sliding_mode_observer_get_emfs(&smo);
+		float theta_smo = sliding_mode_observer_get_electrical_angle(&smo);
+		float omega_smo = sliding_mode_observer_get_electrical_speed(&smo);
 
 		monitor_frame.header = FOC_FRAME_HEADER;
 		monitor_frame.ia_mA = curr_abc.curr_a;
 		monitor_frame.ib_mA = curr_abc.curr_b;
 		monitor_frame.ic_mA = curr_abc.curr_c;
-		monitor_frame.emf_alpha = emf_alpha_beta.e_alpha;
-		monitor_frame.emf_beta = emf_alpha_beta.e_beta;
-		monitor_frame.theta_pll_rad = theta_pll;
-		monitor_frame.theta_real_rad = theta;
-		monitor_frame.omega_pll_rad_s = omega_pll;
-		monitor_frame.omega_real_rad_s = 0u;
+		monitor_frame.emf_alpha = emf_alpha_beta.emf_alfa;
+		monitor_frame.emf_beta = emf_alpha_beta.emf_beta;
+
+		float theta_err = theta_smo - theta_open_loop;
+		while(theta_err > CONSTANT_PI)
+		{
+			theta_err -= CONSTANT_TWO_PI;
+		}
+		while(theta_err < -CONSTANT_PI)
+		{
+			theta_err += CONSTANT_TWO_PI;
+		}
+
+		monitor_frame.theta_pll_rad = theta_err;
+		monitor_frame.theta_real_rad = 0.0f;
+		monitor_frame.omega_pll_rad_s = omega_smo;
+		monitor_frame.omega_real_rad_s = omega_open_loop;
 		foc_telemetry_ready = true;
 	}
 	uart_comm_sw_delay++;
@@ -195,21 +208,18 @@ static void motor_control_task(mc_callback_param_t param)
 	sv_clarke_transform(curr_abc.curr_a, curr_abc.curr_b, curr_abc.curr_c, &curr_alpha, &curr_beta);
 //========================================================================
 	// 3. Sliding mode observer
-	smo_process(&smo, modulator.v_alfa,	modulator.v_beta, curr_alpha, curr_beta);
-	smo_emf_est_t emf_alpha_beta = smo_get_est_emfs(&smo);
-//========================================================================
-	// 4. Phase-locked-loop
-	pll_process_new(&pll, emf_alpha_beta.e_alpha, emf_alpha_beta.e_beta);
-	float theta_pll = pll_get_est_theta(&pll);
-	float omega_pll = pll_get_est_omega(&pll);
+	sliding_mode_observer_process(&smo, modulator.v_alfa,modulator.v_beta, curr_alpha, curr_beta);
+	float theta_smo = sliding_mode_observer_get_electrical_angle(&smo);
+	float omega_smo = sliding_mode_observer_get_electrical_speed(&smo);
 
-	switch (mc_state) {
+	switch (mc_state)
+	{
 		case MC_STATE_ALIGN:
 		{
-			sv_modulation_set_target_vd_vq(&modulator, 0.0f, MOTOR_ALIGNMENT_VQ_MV);
+			sv_modulation_set_target_vd_vq(&modulator, 0.0f, 800.0f);
 			theta = 0.0f;
 			aligment_tick_counter++;
-			if(aligment_tick_counter >= MOTOR_ALIGMENT_TIME_TICKS)
+			if (aligment_tick_counter >= MOTOR_ALIGMENT_TIME_TICKS)
 			{
 				aligment_tick_counter = 0u;
 				theta = 0.0f;
@@ -221,32 +231,18 @@ static void motor_control_task(mc_callback_param_t param)
 		}
 		case MC_STATE_OPEN_LOOP:
 		{
-			sv_modulation_set_target_vd_vq(&modulator, 0.0f, MOTOR_OPEN_LOOP_VQ_MV);
+			sv_modulation_set_target_vd_vq(&modulator, 0.0f, 1000.0f);
 			omega_open_loop += MOTOR_OPEN_LOOP_ACCELERATION_RAD_S2 * TS;
 
-			if(omega_open_loop >= MOTOR_OPEN_LOOP_TARGET_ELEC_SPEED_RAD_S)
+			if (omega_open_loop >= MOTOR_OPEN_LOOP_TARGET_ELEC_SPEED_RAD_S)
 			{
 				omega_open_loop = MOTOR_OPEN_LOOP_TARGET_ELEC_SPEED_RAD_S;
-				mc_state = MC_STATE_STABILIZATION;
 			}
-			theta_open_loop += omega_open_loop * TS;
-			if(theta_open_loop >= CONSTANT_TWO_PI)
+			theta_open_loop -= omega_open_loop * TS;
+			if (theta_open_loop <= 0.0)
 			{
-				theta_open_loop -= CONSTANT_TWO_PI;
-
+				theta_open_loop += CONSTANT_TWO_PI;
 			}
-			theta = theta_open_loop;
-			break;
-		}
-		case MC_STATE_STABILIZATION:
-		{
-			theta_open_loop += omega_open_loop * TS;
-			if (theta_open_loop >= CONSTANT_TWO_PI)
-			{
-				theta_open_loop -= CONSTANT_TWO_PI;
-
-			}
-			theta = theta_open_loop;
 			break;
 		}
 		default:
@@ -255,7 +251,7 @@ static void motor_control_task(mc_callback_param_t param)
 		}
 	}
 
-	sv_modulation_process(&modulator, theta);
+	sv_modulation_process(&modulator, theta_open_loop);
 }
 
 

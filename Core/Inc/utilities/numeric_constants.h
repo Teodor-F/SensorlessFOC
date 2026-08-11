@@ -14,4 +14,13 @@
 #define CONSTANT_PI     	3.1415926535897932384626433832795f
 #define CONSTANT_TWO_PI 	2.0f * CONSTANT_PI
 
+
+#define CONSTRAIN_ANGLE_RAD_ZERO_TWO_PI(theta)	\
+    do {                                 		\
+        while ((theta) < 0.0f)           		\
+            (theta) += CONSTANT_TWO_PI;         \
+        while ((theta) >= CONSTANT_TWO_PI)      \
+            (theta) -= CONSTANT_TWO_PI;         \
+    } while (0)
+
 #endif /* NUMERIC_CONSTANTS */

@@ -92,7 +92,7 @@
 
 //========================================================================
 	// UART
-#define UART_COMM_REFRESH_RATE_HZ	100u
+#define UART_COMM_REFRESH_RATE_HZ	25u
 #define UART_COMM_TRIG_CNT_VALUE	PWM_FREQ_HZ / UART_COMM_REFRESH_RATE_HZ
 
 //========================================================================

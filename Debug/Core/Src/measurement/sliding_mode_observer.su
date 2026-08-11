@@ -1,5 +1,7 @@
-../Core/Src/measurement/sliding_mode_observer.c:5:21:smo_sliding_function	24	static
-../Core/Src/measurement/sliding_mode_observer.c:25:6:smo_init	24	static
-../Core/Src/measurement/sliding_mode_observer.c:49:6:smo_process	56	static
-../Core/Src/measurement/sliding_mode_observer.c:79:6:smo_reset	16	static
-../Core/Src/measurement/sliding_mode_observer.c:90:15:smo_get_est_emfs	40	static
+../Core/Src/measurement/sliding_mode_observer.c:5:21:sliding_function	24	static
+../Core/Src/measurement/sliding_mode_observer.c:25:6:sliding_mode_observer_init	24	static
+../Core/Src/measurement/sliding_mode_observer.c:57:6:sliding_mode_observer_process	64	static
+../Core/Src/measurement/sliding_mode_observer.c:135:6:sliding_mode_observer_reset	16	static
+../Core/Src/measurement/sliding_mode_observer.c:151:33:sliding_mode_observer_get_emfs	40	static
+../Core/Src/measurement/sliding_mode_observer.c:159:7:sliding_mode_observer_get_electrical_angle	24	static
+../Core/Src/measurement/sliding_mode_observer.c:167:7:sliding_mode_observer_get_electrical_speed	24	static

@@ -88,6 +88,8 @@ int main(void)
 
 	/* Initialize all configured peripherals */
 	/* USER CODE BEGIN 2 */
+
+
 	motor_control_initializer();
 	/* USER CODE END 2 */
 
