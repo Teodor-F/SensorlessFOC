@@ -1,5 +1,6 @@
 #include <pll.h>
 #include <assert.h>
+#include <config/motor_cfg.h>
 #include <numeric_constants.h>
 
 void pll_init(pll_t* const instance, const pll_cfg_t* cfg)
@@ -75,7 +76,7 @@ void pll_process_new(pll_t* const instance, float emf_alpha_est, float emf_beta_
 
 	float mag = sqrtf(emf_alpha_est * emf_alpha_est + emf_beta_est * emf_beta_est) + 1e-6f;
     //float mag = fabsf(emf_alpha_est) + fabsf(emf_beta_est) + 1e-6f;
-	float error = (emf_beta_est * cos_value - emf_alpha_est * sin_value) / mag;
+	float error = (-emf_alpha_est * cos_value - emf_beta_est * sin_value) / mag;
 
 	// PI-block
 	instance->omega_integral = instance->omega_integral + instance->ki_ts * error;
@@ -103,7 +104,7 @@ void pll_process_new(pll_t* const instance, float emf_alpha_est, float emf_beta_
 	// Integrate omega to obtain the theta
 	instance->theta_est = instance->theta_est + instance->omega_est * instance->ts;
     // wrap
-    if (instance->theta_est >= CONSTANT_TWO_PI)
+    if (instance->theta_est > CONSTANT_TWO_PI)
     {
         instance->theta_est -= CONSTANT_TWO_PI;
     }
@@ -125,14 +126,14 @@ void pll_reset(pll_t* const instance)
 float pll_get_est_theta(const pll_t* const instance)
 {
 	assert(instance != NULL);
-	float retVal = instance->theta_est;
-	return retVal;
+	float ret_val = instance->theta_est;
+	return ret_val;
 }
 
 float pll_get_est_omega(const pll_t* const instance)
 {
 	assert(instance != NULL);
-	float retVal = instance->omega_est;
-	return retVal;
+	float ret_val = instance->omega_est;
+	return ret_val;
 }
 
