@@ -1,5 +1,6 @@
+#include <config/motor_cfg.h>
 /**
-  ******************************************************************************
+ ******************************************************************************
   * @file    stm32g4xx_ll_adc.c
   * @author  MCD Application Team
   * @brief   ADC LL module driver

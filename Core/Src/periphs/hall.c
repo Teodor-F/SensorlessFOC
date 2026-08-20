@@ -1,8 +1,8 @@
-/*---------------- Includes --------------------------------------------------*/
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
 #include <assert.h>
+#include <config/motor_cfg.h>
 #include <hall.h>
 
 /*---------------- Private defines -------------------------------------------*/

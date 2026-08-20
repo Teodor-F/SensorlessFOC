@@ -1,3 +1,0 @@
-../Core/Src/motor_control/pi_controller.c:4:6:pi_controller_init	1
-../Core/Src/motor_control/pi_controller.c:17:7:pi_controller_process	5
-../Core/Src/motor_control/pi_controller.c:49:6:pi_controller_reset	1

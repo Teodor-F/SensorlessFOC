@@ -1,46 +1,4 @@
-/**
-  ******************************************************************************
-  * @file    stm32g4xx_hal_uart_ex.c
-  * @author  MCD Application Team
-  * @brief   Extended UART HAL module driver.
-  *          This file provides firmware functions to manage the following extended
-  *          functionalities of the Universal Asynchronous Receiver Transmitter Peripheral (UART).
-  *           + Initialization and de-initialization functions
-  *           + Peripheral Control functions
-  *
-  *
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  @verbatim
-  ==============================================================================
-               ##### UART peripheral extended features  #####
-  ==============================================================================
-  [..]
-    (#) Declare a UART_HandleTypeDef handle structure.
-
-    (#) For the UART RS485 Driver Enable mode, initialize the UART registers
-        by calling the HAL_RS485Ex_Init() API.
-
-    (#) FIFO mode enabling/disabling and RX/TX FIFO threshold programming.
-
-        -@- When UART operates in FIFO mode, FIFO mode must be enabled prior
-            starting RX/TX transfers. Also RX/TX FIFO thresholds must be
-            configured prior starting RX/TX transfers.
-
-  @endverbatim
-  ******************************************************************************
-  */
-
-/* Includes ------------------------------------------------------------------*/
+#include <config/motor_cfg.h>
 #include "stm32g4xx_hal.h"
 
 /** @addtogroup STM32G4xx_HAL_Driver

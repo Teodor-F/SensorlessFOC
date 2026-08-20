@@ -1,6 +1,7 @@
 #include <pwm.h>
 #include <stdbool.h>
 #include <assert.h>
+#include <config/motor_cfg.h>
 
 #define PWM_DEAD_TIME_NS	1000u
 #define GIGAHERTZ_IN_HZ		1000000000.0f

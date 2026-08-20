@@ -1,3 +1,4 @@
+#include <config/motor_cfg.h>
 #include "lpf_butterworth.h"
 #include <numeric_constants.h>
 

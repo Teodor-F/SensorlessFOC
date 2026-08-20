@@ -36,7 +36,8 @@ Core/Src/periphs/mctimer.o: ../Core/Src/periphs/mctimer.c \
  C:/Development/VenomESC/Core/Inc/utilities/numeric_constants.h \
  C:/Development/VenomESC/Core/Inc/config/motor.h \
  C:/Development/VenomESC/Core/Inc/periphs/mctimer.h \
- C:/Development/VenomESC/Core/Inc/utilities/mc_callback.h
+ C:/Development/VenomESC/Core/Inc/utilities/mc_callback.h \
+ C:/Development/VenomESC/Core/Inc/config/motor_cfg.h
 C:/Development/VenomESC/Core/Inc/config/hardware.h:
 C:/Development/VenomESC/Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:
 C:/Development/VenomESC/Core/Inc/stm32g4xx_hal_conf.h:
@@ -75,3 +76,4 @@ C:/Development/VenomESC/Core/Inc/utilities/numeric_constants.h:
 C:/Development/VenomESC/Core/Inc/config/motor.h:
 C:/Development/VenomESC/Core/Inc/periphs/mctimer.h:
 C:/Development/VenomESC/Core/Inc/utilities/mc_callback.h:
+C:/Development/VenomESC/Core/Inc/config/motor_cfg.h:

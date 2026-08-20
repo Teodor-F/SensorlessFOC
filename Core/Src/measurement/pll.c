@@ -75,7 +75,6 @@ void pll_process_new(pll_t* const instance, float emf_alpha_est, float emf_beta_
 	float cos_value = cosf(instance->theta_est);
 
 	float mag = sqrtf(emf_alpha_est * emf_alpha_est + emf_beta_est * emf_beta_est) + 1e-6f;
-    //float mag = fabsf(emf_alpha_est) + fabsf(emf_beta_est) + 1e-6f;
 	float error = (-emf_alpha_est * cos_value - emf_beta_est * sin_value) / mag;
 
 	// PI-block
@@ -118,6 +117,7 @@ void pll_process_new(pll_t* const instance, float emf_alpha_est, float emf_beta_
 void pll_reset(pll_t* const instance)
 {
 	assert(instance != NULL);
+	instance->omega_integral = 0.0f;
 	instance->omega_est = 0.0f;
 	instance->theta_est = 0.0f;
 }

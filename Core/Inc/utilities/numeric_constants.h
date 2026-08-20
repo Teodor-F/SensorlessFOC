@@ -23,4 +23,12 @@
             (theta) -= CONSTANT_TWO_PI;         \
     } while (0)
 
+#define CONSTAIN_ANGLE_RAD_MINUS_PI_PI(theta) 	\
+	do {										\
+		while ((theta) < -CONSTANT_PI)			\
+			(theta) += CONSTANT_TWO_PI;			\
+		while((theta) > CONSTANT_PI)			\
+			(theta) -= CONSTANT_TWO_PI;			\
+	} while (0);								\
+
 #endif /* NUMERIC_CONSTANTS */

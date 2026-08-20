@@ -1,5 +1,6 @@
 #include <sliding_mode_observer.h>
 #include <assert.h>
+#include <config/motor_cfg.h>
 #include <numeric_constants.h>
 
 static inline float sliding_function(sliding_mode_observer_t* const instance, float est_err)
@@ -83,53 +84,54 @@ void sliding_mode_observer_process(sliding_mode_observer_t* const instance, floa
 	instance->i_alpha_error = i_alpha_est_err;
 	instance->i_beta_error  = i_beta_est_err;
 
+	// 6. Calculate the electrical position
 
-//========================================================================
-	// 6. Estimate the rotor's electrical angle and -speed
+	instance->theta_est = -atan2f(instance->e_alpha_est, instance->e_beta_est);
+	CONSTRAIN_ANGLE_RAD_ZERO_TWO_PI(instance->theta_est);
 
-	instance->emf_mag = sqrtf(instance->e_alpha_est * instance->e_alpha_est + instance->e_beta_est * instance->e_beta_est);
-	if (instance->emf_mag > 500.0f)
-	{
-		instance->theta_est = atan2f(instance->e_beta_est, instance->e_alpha_est);
-
-		if (instance->omega_est > 0)
-		{
-			instance->theta_est = instance->theta_est - (CONSTANT_PI * ONE_BY_TWO);
-		}
-		else
-		{
-			instance->theta_est = instance->theta_est + (CONSTANT_PI * ONE_BY_TWO);
-		}
-
-		if (instance->theta_est < 0.0f)
-		{
-			instance->theta_est += CONSTANT_TWO_PI;
-		}
-		else if (instance->theta_est > CONSTANT_TWO_PI)
-		{
-			instance->theta_est -= CONSTANT_TWO_PI;
-		}
-
-
-		//CONSTRAIN_ANGLE_RAD_ZERO_TWO_PI(instance->theta_est);
-
-		float delta_theta = instance->theta_est - instance->last_theta_est;
-		if (delta_theta > CONSTANT_PI)
-		{
-			delta_theta -= CONSTANT_TWO_PI;
-		}
-		else if (delta_theta < -CONSTANT_PI)
-		{
-			delta_theta += CONSTANT_TWO_PI;
-		}
-
-		float omega_raw = delta_theta * instance->inv_ts;
-
-		instance->omega_est = (1.0f - instance->omega_lpf_gain) * instance->omega_est + omega_raw * instance->omega_lpf_gain;
-		instance->last_theta_est = instance->theta_est;
-	}
-
-
+////========================================================================
+//	// 6. Estimate the rotor's electrical angle and -speed
+//	instance->emf_mag = sqrtf(instance->e_alpha_est * instance->e_alpha_est + instance->e_beta_est * instance->e_beta_est);
+//	if (instance->emf_mag > 500.0f)
+//	{
+//		instance->theta_est = atan2f(instance->e_beta_est, instance->e_alpha_est);
+//
+//		if (instance->omega_est > 0)
+//		{
+//			instance->theta_est = instance->theta_est - (CONSTANT_PI * ONE_BY_TWO);
+//		}
+//		else
+//		{
+//			instance->theta_est = instance->theta_est + (CONSTANT_PI * ONE_BY_TWO);
+//		}
+//
+//		if (instance->theta_est < 0.0f)
+//		{
+//			instance->theta_est += CONSTANT_TWO_PI;
+//		}
+//		else if (instance->theta_est > CONSTANT_TWO_PI)
+//		{
+//			instance->theta_est -= CONSTANT_TWO_PI;
+//		}
+//
+//
+//		//CONSTRAIN_ANGLE_RAD_ZERO_TWO_PI(instance->theta_est);
+//
+//		float delta_theta = instance->theta_est - instance->last_theta_est;
+//		if (delta_theta > CONSTANT_PI)
+//		{
+//			delta_theta -= CONSTANT_TWO_PI;
+//		}
+//		else if (delta_theta < -CONSTANT_PI)
+//		{
+//			delta_theta += CONSTANT_TWO_PI;
+//		}
+//
+//		float omega_raw = delta_theta * instance->inv_ts;
+//
+//		instance->omega_est = (1.0f - instance->omega_lpf_gain) * instance->omega_est + omega_raw * instance->omega_lpf_gain;
+//		instance->last_theta_est = instance->theta_est;
+//	}
 }
 
 void sliding_mode_observer_reset(sliding_mode_observer_t* const instance)

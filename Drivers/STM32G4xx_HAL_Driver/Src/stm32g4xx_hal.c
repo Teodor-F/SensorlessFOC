@@ -1,37 +1,4 @@
-/**
-  ******************************************************************************
-  * @file    stm32g4xx_hal.c
-  * @author  MCD Application Team
-  * @brief   HAL module driver.
-  *          This is the common part of the HAL initialization
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  @verbatim
-  ==============================================================================
-                     ##### How to use this driver #####
-  ==============================================================================
-    [..]
-    The common HAL driver contains a set of generic and common APIs that can be
-    used by the PPP peripheral drivers and the user to start using the HAL.
-    [..]
-    The HAL contains two APIs' categories:
-         (+) Common HAL APIs
-         (+) Services HAL APIs
-
-  @endverbatim
-  ******************************************************************************
-  */
-
-/* Includes ------------------------------------------------------------------*/
+#include <config/motor_cfg.h>
 #include "stm32g4xx_hal.h"
 
 /** @addtogroup STM32G4xx_HAL_Driver

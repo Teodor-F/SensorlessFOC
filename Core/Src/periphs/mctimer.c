@@ -1,5 +1,6 @@
 #include <mctimer.h>
 #include <assert.h>
+#include <config/motor_cfg.h>
 #include <math.h>
 #include <stdbool.h>
 

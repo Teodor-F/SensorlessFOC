@@ -1,5 +1,6 @@
 #include <current_measure.h>
 #include <adc.h>
+#include <config/motor_cfg.h>
 #include <pwm.h>
 
 
@@ -23,53 +24,44 @@ void current_measure_init(current_measure_t *const instance, const current_measu
 void current_measure_process(current_measure_t *const instance)
 {
 	adc_currents_t adc_currs = adc_get_currents();
-	pwm_duty_cycles_t pwm_dcs = pwm_get_duty_cycles();
+//	pwm_duty_cycles_t pwm_dcs = pwm_get_duty_cycles();
 
 	float voltage_offset = instance->offset_voltage;
 	float curr_gain = instance->inv_current_gain;
 	float resolution = instance->adc_resolution;
 
-//========================================================================
-	// 1. Low3 shunt measurement, always omit calculation for the phase current with the highest duty cycle
-	if (pwm_dcs.dc_phase_u < pwm_dcs.dc_phase_v)
-	{
-		instance->curr_a = calculate_current(adc_currs.curr_a, resolution, voltage_offset, curr_gain);
-		if (pwm_dcs.dc_phase_v < pwm_dcs.dc_phase_w)
-		{
-			instance->curr_b = calculate_current(adc_currs.curr_b, resolution, voltage_offset, curr_gain);
-			instance->curr_c = -(instance->curr_a + instance->curr_b);
-		}
-		else
-		{
-			instance->curr_c = calculate_current(adc_currs.curr_c, resolution, voltage_offset, curr_gain);
-			instance->curr_b = -(instance->curr_a + instance->curr_c);
-		}
-	}
-	else
-	{
-		instance->curr_b = calculate_current(adc_currs.curr_b, resolution, voltage_offset, curr_gain);
-		if (pwm_dcs.dc_phase_u < pwm_dcs.dc_phase_w)
-		{
-			instance->curr_a = calculate_current(adc_currs.curr_a, resolution, voltage_offset, curr_gain);
-			instance->curr_c = -(instance->curr_a + instance->curr_b);
-		}
-		else
-		{
-			instance->curr_c = calculate_current(adc_currs.curr_c, resolution, voltage_offset, curr_gain);
-			instance->curr_a = -(instance->curr_b + instance->curr_c);
-		}
-	}
+	instance->curr_a = calculate_current(adc_currs.curr_a, resolution, voltage_offset, curr_gain);
+	instance->curr_b = calculate_current(adc_currs.curr_b, resolution, voltage_offset, curr_gain);
+	instance->curr_c = calculate_current(adc_currs.curr_c, resolution, voltage_offset, curr_gain);
 
-
-//	// Clarke-transform
-//	instance->curr_alfa = instance->curr_a;
-//	instance->curr_beta = (ONE_BY_SQRT_THREE) * (instance->curr_b - instance->curr_c);
-//
-//	// Park-transform
-//	float sin_value = sinf(theta);
-//	float cos_value = cosf(theta);
-//	instance->curr_d = instance->curr_alfa * cos_value + instance->curr_beta * sin_value;
-//	instance->curr_q = -instance->curr_alfa * sin_value + instance->curr_beta * cos_value;
+//	if (pwm_dcs.dc_phase_u < pwm_dcs.dc_phase_v)
+//	{
+//		instance->curr_a = calculate_current(adc_currs.curr_a, resolution, voltage_offset, curr_gain);
+//		if (pwm_dcs.dc_phase_v < pwm_dcs.dc_phase_w)
+//		{
+//			instance->curr_b = calculate_current(adc_currs.curr_b, resolution, voltage_offset, curr_gain);
+//			instance->curr_c = -(instance->curr_a + instance->curr_b);
+//		}
+//		else
+//		{
+//			instance->curr_c = calculate_current(adc_currs.curr_c, resolution, voltage_offset, curr_gain);
+//			instance->curr_b = -(instance->curr_a + instance->curr_c);
+//		}
+//	}
+//	else
+//	{
+//		instance->curr_b = calculate_current(adc_currs.curr_b, resolution, voltage_offset, curr_gain);
+//		if (pwm_dcs.dc_phase_u < pwm_dcs.dc_phase_w)
+//		{
+//			instance->curr_a = calculate_current(adc_currs.curr_a, resolution, voltage_offset, curr_gain);
+//			instance->curr_c = -(instance->curr_a + instance->curr_b);
+//		}
+//		else
+//		{
+//			instance->curr_c = calculate_current(adc_currs.curr_c, resolution, voltage_offset, curr_gain);
+//			instance->curr_a = -(instance->curr_b + instance->curr_c);
+//		}
+//	}
 
 }
 

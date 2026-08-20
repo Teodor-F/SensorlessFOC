@@ -1,27 +1,4 @@
-/**
-  ******************************************************************************
-  * @file    stm32g4xx_hal_rcc_ex.c
-  * @author  MCD Application Team
-  * @brief   Extended RCC HAL module driver.
-  *          This file provides firmware functions to manage the following
-  *          functionalities RCC extended peripheral:
-  *           + Extended Peripheral Control functions
-  *           + Extended Clock management functions
-  *           + Extended Clock Recovery System Control functions
-  *
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file in
-  * the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  ******************************************************************************
-  */
-
-/* Includes ------------------------------------------------------------------*/
+#include <config/motor_cfg.h>
 #include "stm32g4xx_hal.h"
 
 /** @addtogroup STM32G4xx_HAL_Driver

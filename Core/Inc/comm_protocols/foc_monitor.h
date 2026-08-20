@@ -1,5 +1,3 @@
-#include <stdint.h>
-
 #ifndef FOC_MONITOR_H
 #define FOC_MONITOR_H
 
@@ -15,6 +13,7 @@ struct __attribute__((packed)) foc_monitor_frame {
     float  		emf_alpha;
     float		emf_beta;
     float		theta_pll_rad;
+    float		theta_smo_rad;
     float		theta_real_rad;
     float  		omega_pll_rad_s;
     float		omega_real_rad_s;

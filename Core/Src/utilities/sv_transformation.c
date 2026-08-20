@@ -1,9 +1,10 @@
+#include <config/motor_cfg.h>
 #include <numeric_constants.h>
 
 
 void sv_clarke_transform(float curr_a, float curr_b, float curr_c, float *curr_alpha, float *curr_beta)
 {
-	*curr_alpha = (TWO_BY_THREE) * (curr_a - ONE_BY_TWO * curr_b - ONE_BY_TWO * curr_c);
+	*curr_alpha = curr_a;
 	*curr_beta = (ONE_BY_SQRT_THREE) * (curr_b - curr_c);
 }
 

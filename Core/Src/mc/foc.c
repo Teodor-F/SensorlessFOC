@@ -1,4 +1,4 @@
-//
+#include <config/motor_cfg.h>
 //
 //#include <adc.h>
 //#include <foc.h>

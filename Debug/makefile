@@ -16,6 +16,8 @@ RM := rm -rf
 -include Core/Src/motor_control/subdir.mk
 -include Core/Src/measurement/subdir.mk
 -include Core/Src/mc/subdir.mk
+-include Core/Src/control/subdir.mk
+-include Core/Src/config/subdir.mk
 -include Core/Src/subdir.mk
 -include objects.mk
 

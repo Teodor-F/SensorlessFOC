@@ -1,3 +1,4 @@
+#include <config/motor_cfg.h>
 #include <numeric_constants.h>
 
 void clarke_transform(float curr_a, float curr_b, float curr_c, float *curr_alpha, float *curr_beta)

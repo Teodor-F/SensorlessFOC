@@ -1,35 +1,4 @@
-/**
-  ******************************************************************************
-  * @file    stm32g4xx_hal_adc_ex.c
-  * @author  MCD Application Team
-  * @brief   This file provides firmware functions to manage the following
-  *          functionalities of the Analog to Digital Converter (ADC)
-  *          peripheral:
-  *           + Peripheral Control functions
-  *          Other functions (generic functions) are available in file
-  *          "stm32g4xx_hal_adc.c".
-  *
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  @verbatim
-  [..]
-  (@) Sections "ADC peripheral features" and "How to use this driver" are
-      available in file of generic functions "stm32g4xx_hal_adc.c".
-  [..]
-  @endverbatim
-  ******************************************************************************
-  */
-
-/* Includes ------------------------------------------------------------------*/
+#include <config/motor_cfg.h>
 #include "stm32g4xx_hal.h"
 
 /** @addtogroup STM32G4xx_HAL_Driver

@@ -1,5 +1,5 @@
-../Core/Src/periphs/adc.c:24:6:ADC1_2_IRQHandler	1
-../Core/Src/periphs/adc.c:30:6:HAL_ADCEx_InjectedConvCpltCallback	3
-../Core/Src/periphs/adc.c:45:6:adc_init	2
-../Core/Src/periphs/adc.c:164:16:adc_get_currents	1
-../Core/Src/periphs/adc.c:173:10:adc_get_signal	1
+../Core/Src/periphs/adc.c:25:6:ADC1_2_IRQHandler	1
+../Core/Src/periphs/adc.c:31:6:HAL_ADCEx_InjectedConvCpltCallback	3
+../Core/Src/periphs/adc.c:46:6:adc_init	2
+../Core/Src/periphs/adc.c:165:16:adc_get_currents	1
+../Core/Src/periphs/adc.c:174:10:adc_get_signal	1

@@ -46,7 +46,6 @@
 
 //========================================================================
 	// ADC
-
 #define ADC_IU_GPIO_PIN		GPIO_PIN_0
 #define ADC_IU_GPIO_PORT    GPIOA
 #define ADC_IU_CHANNEL      ADC_CHANNEL_1
@@ -92,12 +91,12 @@
 
 //========================================================================
 	// UART
-#define UART_COMM_REFRESH_RATE_HZ	25u
+#define UART_COMM_REFRESH_RATE_HZ	50u
 #define UART_COMM_TRIG_CNT_VALUE	PWM_FREQ_HZ / UART_COMM_REFRESH_RATE_HZ
 
 //========================================================================
 	// OTHER SYSTEM CONSTANTS
 
-#define TS ((float)(1.0f/PWM_FREQ_HZ))
+#define SAMPLING_TIME ((float)(1.0f/PWM_FREQ_HZ))
 
 #endif /* CONFIG_HARDWARE_H_ */

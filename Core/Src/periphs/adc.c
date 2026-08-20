@@ -2,6 +2,7 @@
 #include <stdbool.h>
 
 #include <assert.h>
+#include <config/motor_cfg.h>
 
 #define ADC_CURRENTS_NUM 	3u
 #define ADC_IU_IDX			0u

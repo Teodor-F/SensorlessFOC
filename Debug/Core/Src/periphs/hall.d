@@ -35,6 +35,7 @@ Core/Src/periphs/hall.o: ../Core/Src/periphs/hall.c \
  C:/Development/VenomESC/Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h \
  C:/Development/VenomESC/Core/Inc/utilities/numeric_constants.h \
  C:/Development/VenomESC/Core/Inc/config/motor.h \
+ C:/Development/VenomESC/Core/Inc/config/motor_cfg.h \
  C:/Development/VenomESC/Core/Inc/periphs/hall.h
 C:/Development/VenomESC/Core/Inc/config/hardware.h:
 C:/Development/VenomESC/Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:
@@ -72,4 +73,5 @@ C:/Development/VenomESC/Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h:
 C:/Development/VenomESC/Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h:
 C:/Development/VenomESC/Core/Inc/utilities/numeric_constants.h:
 C:/Development/VenomESC/Core/Inc/config/motor.h:
+C:/Development/VenomESC/Core/Inc/config/motor_cfg.h:
 C:/Development/VenomESC/Core/Inc/periphs/hall.h:

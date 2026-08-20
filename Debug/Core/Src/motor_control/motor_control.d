@@ -38,18 +38,24 @@ Core/Src/motor_control/motor_control.o: \
  C:/Development/VenomESC/Core/Inc/config/motor.h \
  C:/Development/VenomESC/Core/Inc/motor_control/motor_control.h \
  C:/Development/VenomESC/Core/Inc/comm_protocols/foc_monitor.h \
+ C:/Development/VenomESC/Core/Inc/periphs/periph_layer_initializer.h \
  C:/Development/VenomESC/Core/Inc/periphs/adc.h \
  C:/Development/VenomESC/Core/Inc/periphs/pwm.h \
  C:/Development/VenomESC/Core/Inc/periphs/mctimer.h \
  C:/Development/VenomESC/Core/Inc/utilities/mc_callback.h \
- C:/Development/VenomESC/Core/Inc/periphs/hall.h \
+ C:/Development/VenomESC/Core/Inc/measurement/measurement_layer_initializer.h \
  C:/Development/VenomESC/Core/Inc/measurement/current_measure.h \
  C:/Development/VenomESC/Core/Inc/measurement/sliding_mode_observer.h \
  C:/Development/VenomESC/Core/Inc/measurement/pll.h \
- C:/Development/VenomESC/Core/Inc/motor_control/sv_modulation.h \
- C:/Development/VenomESC/Core/Inc/motor_control/pi_cntrl.h \
  C:/Development/VenomESC/Core/Inc/measurement/velocity_measure.h \
- C:/Development/VenomESC/Core/Inc/utilities/sv_transformations.h
+ C:/Development/VenomESC/Core/Inc/utilities/lpf_first_order.h \
+ C:/Development/VenomESC/Core/Inc/control/control_layer_initializer.h \
+ C:/Development/VenomESC/Core/Inc/control/velocity_controller.h \
+ C:/Development/VenomESC/Core/Inc/control/pi_controller.h \
+ C:/Development/VenomESC/Core/Inc/control/current_controller.h \
+ C:/Development/VenomESC/Core/Inc/control/sv_modulation.h \
+ C:/Development/VenomESC/Core/Inc/motor_control/motor_control_manager_initializer.h \
+ C:/Development/VenomESC/Core/Inc/motor_control/motor_control_manager.h
 C:/Development/VenomESC/Core/Inc/config/hardware.h:
 C:/Development/VenomESC/Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:
 C:/Development/VenomESC/Core/Inc/stm32g4xx_hal_conf.h:
@@ -88,15 +94,21 @@ C:/Development/VenomESC/Core/Inc/utilities/numeric_constants.h:
 C:/Development/VenomESC/Core/Inc/config/motor.h:
 C:/Development/VenomESC/Core/Inc/motor_control/motor_control.h:
 C:/Development/VenomESC/Core/Inc/comm_protocols/foc_monitor.h:
+C:/Development/VenomESC/Core/Inc/periphs/periph_layer_initializer.h:
 C:/Development/VenomESC/Core/Inc/periphs/adc.h:
 C:/Development/VenomESC/Core/Inc/periphs/pwm.h:
 C:/Development/VenomESC/Core/Inc/periphs/mctimer.h:
 C:/Development/VenomESC/Core/Inc/utilities/mc_callback.h:
-C:/Development/VenomESC/Core/Inc/periphs/hall.h:
+C:/Development/VenomESC/Core/Inc/measurement/measurement_layer_initializer.h:
 C:/Development/VenomESC/Core/Inc/measurement/current_measure.h:
 C:/Development/VenomESC/Core/Inc/measurement/sliding_mode_observer.h:
 C:/Development/VenomESC/Core/Inc/measurement/pll.h:
-C:/Development/VenomESC/Core/Inc/motor_control/sv_modulation.h:
-C:/Development/VenomESC/Core/Inc/motor_control/pi_cntrl.h:
 C:/Development/VenomESC/Core/Inc/measurement/velocity_measure.h:
-C:/Development/VenomESC/Core/Inc/utilities/sv_transformations.h:
+C:/Development/VenomESC/Core/Inc/utilities/lpf_first_order.h:
+C:/Development/VenomESC/Core/Inc/control/control_layer_initializer.h:
+C:/Development/VenomESC/Core/Inc/control/velocity_controller.h:
+C:/Development/VenomESC/Core/Inc/control/pi_controller.h:
+C:/Development/VenomESC/Core/Inc/control/current_controller.h:
+C:/Development/VenomESC/Core/Inc/control/sv_modulation.h:
+C:/Development/VenomESC/Core/Inc/motor_control/motor_control_manager_initializer.h:
+C:/Development/VenomESC/Core/Inc/motor_control/motor_control_manager.h:
