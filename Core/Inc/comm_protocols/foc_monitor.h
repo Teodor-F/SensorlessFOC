@@ -10,14 +10,16 @@ struct __attribute__((packed)) foc_monitor_frame {
     int32_t  	ia_mA;
     int32_t  	ib_mA;
     int32_t  	ic_mA;
-    float  		emf_alpha;
-    float		emf_beta;
-    float		theta_pll_rad;
-    float		theta_smo_rad;
-    float		theta_real_rad;
-    float  		omega_pll_rad_s;
-    float		omega_real_rad_s;
-    uint16_t crc;
+    int32_t		id_mA;
+    int32_t		iq_mA;
+    float_t  	emf_alpha;
+    float_t		emf_beta;
+    float_t		theta_pll_rad;
+    float_t		theta_ref_log_rad;
+    float_t		theta_real_rad;
+    float_t  	velocity_pll_rpm;
+    float_t		velocity_setpoint;
+    uint16_t 	crc;
 };
 
 #endif // FOC_MONITOR_H

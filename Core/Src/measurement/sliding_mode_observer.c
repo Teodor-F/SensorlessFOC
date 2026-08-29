@@ -1,6 +1,6 @@
 #include <sliding_mode_observer.h>
 #include <assert.h>
-#include <config/motor_cfg.h>
+#include <string.h>
 #include <numeric_constants.h>
 
 static inline float sliding_function(sliding_mode_observer_t* const instance, float est_err)
@@ -39,19 +39,24 @@ void sliding_mode_observer_init(sliding_mode_observer_t* const instance, const s
 	instance->inv_boundary = (1.0f / instance->boundary);
 	instance->ts = cfg->ts;
 	instance->inv_ts = 1.0f / instance->ts;
-	instance->omega_lpf_gain = cfg->omega_lpf_gain;
 
 	instance->i_alpha_est = 0.0f;
 	instance->i_beta_est = 0.0f;
 	instance->e_alpha_est = 0.0f;
 	instance->e_beta_est = 0.0f;
 	instance->theta_est = 0.0f;
+	instance->theta_est_prev = 0.0f;
 	instance->omega_est = 0.0f;
 
 	instance->i_alpha_error = 0.0f;
 	instance->i_beta_error = 0.0f;
-	instance->last_theta_est = 0.0f;
 	instance->emf_mag = 0.0f;
+
+	memset(instance->delta_theta_buf, 0.0f, sizeof(instance->delta_theta_buf));
+	instance->delta_theta_sum = 0.0f;
+	instance->inv_n_ts = 1.0f / (SMO_MOVING_AVG_FILTER_LEN * instance->ts);
+	instance->idx = 0;
+
 }
 
 
@@ -84,54 +89,34 @@ void sliding_mode_observer_process(sliding_mode_observer_t* const instance, floa
 	instance->i_alpha_error = i_alpha_est_err;
 	instance->i_beta_error  = i_beta_est_err;
 
-	// 6. Calculate the electrical position
-
-	instance->theta_est = -atan2f(instance->e_alpha_est, instance->e_beta_est);
-	CONSTRAIN_ANGLE_RAD_ZERO_TWO_PI(instance->theta_est);
-
-////========================================================================
 //	// 6. Estimate the rotor's electrical angle and -speed
-//	instance->emf_mag = sqrtf(instance->e_alpha_est * instance->e_alpha_est + instance->e_beta_est * instance->e_beta_est);
-//	if (instance->emf_mag > 500.0f)
-//	{
-//		instance->theta_est = atan2f(instance->e_beta_est, instance->e_alpha_est);
-//
-//		if (instance->omega_est > 0)
-//		{
-//			instance->theta_est = instance->theta_est - (CONSTANT_PI * ONE_BY_TWO);
-//		}
-//		else
-//		{
-//			instance->theta_est = instance->theta_est + (CONSTANT_PI * ONE_BY_TWO);
-//		}
-//
-//		if (instance->theta_est < 0.0f)
-//		{
-//			instance->theta_est += CONSTANT_TWO_PI;
-//		}
-//		else if (instance->theta_est > CONSTANT_TWO_PI)
-//		{
-//			instance->theta_est -= CONSTANT_TWO_PI;
-//		}
-//
-//
-//		//CONSTRAIN_ANGLE_RAD_ZERO_TWO_PI(instance->theta_est);
-//
-//		float delta_theta = instance->theta_est - instance->last_theta_est;
-//		if (delta_theta > CONSTANT_PI)
-//		{
-//			delta_theta -= CONSTANT_TWO_PI;
-//		}
-//		else if (delta_theta < -CONSTANT_PI)
-//		{
-//			delta_theta += CONSTANT_TWO_PI;
-//		}
-//
-//		float omega_raw = delta_theta * instance->inv_ts;
-//
-//		instance->omega_est = (1.0f - instance->omega_lpf_gain) * instance->omega_est + omega_raw * instance->omega_lpf_gain;
-//		instance->last_theta_est = instance->theta_est;
-//	}
+	instance->emf_mag = sqrtf(instance->e_alpha_est * instance->e_alpha_est + instance->e_beta_est * instance->e_beta_est);
+	if (instance->emf_mag > 500.0f)
+	{
+		instance->theta_est = -atan2f(instance->e_alpha_est, instance->e_beta_est);
+		CONSTRAIN_ANGLE_RAD_ZERO_TWO_PI(instance->theta_est);
+
+		float delta_theta = instance->theta_est - instance->theta_est_prev;
+
+		if (delta_theta >= CONSTANT_PI)
+		{
+			delta_theta -= CONSTANT_TWO_PI;
+		}
+		else if (delta_theta <= -CONSTANT_PI)
+		{
+			delta_theta += CONSTANT_TWO_PI;
+		}
+		instance->theta_est_prev = instance->theta_est;
+		instance->delta_theta_sum -= instance->delta_theta_buf[instance->idx];
+		instance->delta_theta_buf[instance->idx] = delta_theta;
+		instance->delta_theta_sum += delta_theta;
+		instance->idx++;
+		if (instance->idx >= SMO_MOVING_AVG_FILTER_LEN)
+		{
+			instance->idx = 0;
+		}
+		instance->omega_est = instance->delta_theta_sum * instance->inv_n_ts;
+	}
 }
 
 void sliding_mode_observer_reset(sliding_mode_observer_t* const instance)
@@ -144,7 +129,7 @@ void sliding_mode_observer_reset(sliding_mode_observer_t* const instance)
 	instance->i_alpha_error 	= 0.0f;
 	instance->i_beta_error 		= 0.0f;
 	instance->theta_est 		= 0.0f;
-	instance->last_theta_est	= 0.0f;
+	instance->theta_est_prev	= 0.0f;
 	instance->omega_est 		= 0.0f;
 	instance->emf_mag 			= 0.0f;
 

@@ -3,4 +3,4 @@
 ../Core/Src/measurement/pll.c:70:6:pll_process_new	48	static
 ../Core/Src/measurement/pll.c:117:6:pll_reset	16	static
 ../Core/Src/measurement/pll.c:126:7:pll_get_est_theta	24	static
-../Core/Src/measurement/pll.c:133:7:pll_get_est_omega	24	static
+../Core/Src/measurement/pll.c:137:7:pll_get_est_omega	24	static

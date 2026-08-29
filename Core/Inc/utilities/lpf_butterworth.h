@@ -24,6 +24,6 @@ void lpf_butterworth_init(lpf_butterworth_t* const instance, const lpf_butterwor
 
 void lpf_butterworth_process(lpf_butterworth_t* const this, float value);
 
-float lpf_butterworth_process_get_value(lpf_butterworth_t* const instance);
+float lpf_butterworth_get_value(lpf_butterworth_t* const instance);
 
 #endif /* _LPF_BUTTERWORTH_H_ */

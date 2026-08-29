@@ -1,7 +1,7 @@
 ../Core/Src/measurement/sliding_mode_observer.c:6:21:sliding_function	24	static
 ../Core/Src/measurement/sliding_mode_observer.c:26:6:sliding_mode_observer_init	24	static
-../Core/Src/measurement/sliding_mode_observer.c:58:6:sliding_mode_observer_process	56	static
-../Core/Src/measurement/sliding_mode_observer.c:137:6:sliding_mode_observer_reset	16	static
-../Core/Src/measurement/sliding_mode_observer.c:153:33:sliding_mode_observer_get_emfs	40	static
-../Core/Src/measurement/sliding_mode_observer.c:161:7:sliding_mode_observer_get_electrical_angle	24	static
-../Core/Src/measurement/sliding_mode_observer.c:169:7:sliding_mode_observer_get_electrical_speed	24	static
+../Core/Src/measurement/sliding_mode_observer.c:63:6:sliding_mode_observer_process	64	static
+../Core/Src/measurement/sliding_mode_observer.c:122:6:sliding_mode_observer_reset	16	static
+../Core/Src/measurement/sliding_mode_observer.c:138:33:sliding_mode_observer_get_emfs	40	static
+../Core/Src/measurement/sliding_mode_observer.c:146:7:sliding_mode_observer_get_electrical_angle	24	static
+../Core/Src/measurement/sliding_mode_observer.c:154:7:sliding_mode_observer_get_electrical_speed	24	static

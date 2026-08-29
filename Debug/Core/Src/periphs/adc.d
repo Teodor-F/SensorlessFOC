@@ -33,6 +33,7 @@ Core/Src/periphs/adc.o: ../Core/Src/periphs/adc.c \
  C:/Development/VenomESC/Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h \
  C:/Development/VenomESC/Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h \
  C:/Development/VenomESC/Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h \
+ C:/Development/VenomESC/Core/Inc/utilities/mc_types.h \
  C:/Development/VenomESC/Core/Inc/utilities/numeric_constants.h \
  C:/Development/VenomESC/Core/Inc/config/motor.h \
  C:/Development/VenomESC/Core/Inc/periphs/adc.h \
@@ -71,6 +72,7 @@ C:/Development/VenomESC/Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h:
 C:/Development/VenomESC/Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h:
 C:/Development/VenomESC/Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h:
 C:/Development/VenomESC/Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h:
+C:/Development/VenomESC/Core/Inc/utilities/mc_types.h:
 C:/Development/VenomESC/Core/Inc/utilities/numeric_constants.h:
 C:/Development/VenomESC/Core/Inc/config/motor.h:
 C:/Development/VenomESC/Core/Inc/periphs/adc.h:

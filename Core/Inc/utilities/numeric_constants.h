@@ -17,17 +17,17 @@
 
 #define CONSTRAIN_ANGLE_RAD_ZERO_TWO_PI(theta)	\
     do {                                 		\
-        while ((theta) < 0.0f)           		\
+        if ((theta) < 0.0f)           			\
             (theta) += CONSTANT_TWO_PI;         \
-        while ((theta) >= CONSTANT_TWO_PI)      \
+        if ((theta) >= CONSTANT_TWO_PI)      	\
             (theta) -= CONSTANT_TWO_PI;         \
     } while (0)
 
 #define CONSTAIN_ANGLE_RAD_MINUS_PI_PI(theta) 	\
 	do {										\
-		while ((theta) < -CONSTANT_PI)			\
+		if ((theta) < -CONSTANT_PI)				\
 			(theta) += CONSTANT_TWO_PI;			\
-		while((theta) > CONSTANT_PI)			\
+		if((theta) >= CONSTANT_PI)				\
 			(theta) -= CONSTANT_TWO_PI;			\
 	} while (0);								\
 

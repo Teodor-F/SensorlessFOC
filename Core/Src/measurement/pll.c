@@ -75,7 +75,7 @@ void pll_process_new(pll_t* const instance, float emf_alpha_est, float emf_beta_
 	float cos_value = cosf(instance->theta_est);
 
 	float mag = sqrtf(emf_alpha_est * emf_alpha_est + emf_beta_est * emf_beta_est) + 1e-6f;
-	float error = (-emf_alpha_est * cos_value - emf_beta_est * sin_value) / mag;
+	float error = (-emf_alpha_est * sin_value +  emf_beta_est * cos_value) / mag;
 
 	// PI-block
 	instance->omega_integral = instance->omega_integral + instance->ki_ts * error;
@@ -126,7 +126,11 @@ void pll_reset(pll_t* const instance)
 float pll_get_est_theta(const pll_t* const instance)
 {
 	assert(instance != NULL);
-	float ret_val = instance->theta_est;
+
+	float temp = instance->theta_est;
+	temp -= CONSTANT_PI * ONE_BY_TWO;
+	CONSTRAIN_ANGLE_RAD_ZERO_TWO_PI(temp);
+	float ret_val = temp;
 	return ret_val;
 }
 

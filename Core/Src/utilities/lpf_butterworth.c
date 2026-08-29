@@ -1,5 +1,5 @@
+#include <lpf_butterworth.h>
 #include <config/motor_cfg.h>
-#include "lpf_butterworth.h"
 #include <numeric_constants.h>
 
 
@@ -46,7 +46,7 @@ void lpf_butterworth_process(lpf_butterworth_t* const instance, float input_valu
 	instance->processed_value = output;
 }
 
-float lpf_butterworth_process_get_value(lpf_butterworth_t* const instance)
+float lpf_butterworth_get_value(lpf_butterworth_t* const instance)
 {
 	float ret_val = instance->processed_value;
 	return ret_val;

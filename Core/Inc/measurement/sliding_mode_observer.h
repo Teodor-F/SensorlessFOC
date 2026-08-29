@@ -1,6 +1,9 @@
 #ifndef SLIDING_MODE_OBSERVER_H_
 #define SLIDING_MODE_OBSERVER_H_
 
+#define SMO_MOVING_AVG_FILTER_LEN	64u
+
+
 typedef struct sliding_mode_observer_cfg sliding_mode_observer_cfg_t;
 
 typedef struct sliding_mode_observer sliding_mode_observer_t;
@@ -14,7 +17,6 @@ struct sliding_mode_observer_cfg {
 	float k_sliding_gain;
 	float g_emf_gain;
 	float boundary;
-	float omega_lpf_gain;
 };
 
 struct sliding_mode_observer {
@@ -27,19 +29,21 @@ struct sliding_mode_observer {
 	float inv_boundary;
 	float ts;
 	float inv_ts;
-	float omega_lpf_gain;
-
 
 	float i_alpha_est;
 	float i_beta_est;
 	float e_alpha_est;
 	float e_beta_est;
 	float theta_est;
+	float theta_est_prev;
+	float delta_theta_buf[SMO_MOVING_AVG_FILTER_LEN];
+	float delta_theta_sum;
 	float omega_est;
+	uint8_t idx;
+	float inv_n_ts;
 
 	float i_alpha_error;
 	float i_beta_error;
-	float last_theta_est;
 	float emf_mag;
 };
 
