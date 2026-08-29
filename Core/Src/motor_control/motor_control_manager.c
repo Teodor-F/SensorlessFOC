@@ -71,7 +71,7 @@ static void communication_task(mc_callback_param_t param)
 		lpf_first_order_process(lpf_iq, curr_q);
 
 		sliding_mode_observer_emf_est_t emf_alpha_beta = sliding_mode_observer_get_emfs(smo);
-		float_t theta_smo = sliding_mode_observer_get_electrical_angle(smo);
+		float_t theta_observer = pll_get_est_theta(pll);
 
 		monitor_frame.header = FOC_FRAME_HEADER;
 		monitor_frame.ia_mA = curr_abc.curr_a;
@@ -82,7 +82,7 @@ static void communication_task(mc_callback_param_t param)
 		monitor_frame.emf_alpha = emf_alpha_beta.emf_alfa;
 		monitor_frame.emf_beta = emf_alpha_beta.emf_beta;
 		monitor_frame.theta_real_rad = mc_mngr_instance.theta_open_loop;
-		monitor_frame.theta_pll_rad = theta_smo;
+		monitor_frame.theta_observer_rad = theta_observer;
 		monitor_frame.theta_ref_log_rad = mc_mngr_instance.theta_ref_log;
 		monitor_frame.velocity_pll_rpm = velocity_measure_get_rpm(velocity_measure);
 		monitor_frame.velocity_setpoint = mc_mngr_instance.velocity_setpoint;
@@ -149,18 +149,37 @@ static void motor_control_state_machine(void)
 		// Let the observer stabilize for a predefined time
 		case MC_STATE_TRANSITION:
 		{
-			if(mc_mngr_instance.theta_offset_calculated == FALSE)
+			if (mc_mngr_instance.theta_offset_calculated == FALSE)
 			{
-
 				mc_mngr_instance.theta_open_loop += mc_mngr_instance.omega_coeff * mc_mngr_instance.omega_open_loop * mc_mngr_instance.sampling_time;
 				CONSTRAIN_ANGLE_RAD_ZERO_TWO_PI(mc_mngr_instance.theta_open_loop);
 				mc_mngr_instance.theta_ref = mc_mngr_instance.theta_open_loop;
-				mc_mngr_instance.transition_time_tick_counter++;
 
-				if(mc_mngr_instance.transition_time_tick_counter >= mc_mngr_instance.transition_time_ticks)
+				float_t theta_offset = mc_mngr_instance.theta_open_loop - pll_get_est_theta(pll);
+				CONSTAIN_ANGLE_RAD_MINUS_PI_PI(theta_offset);
+
+				mc_mngr_instance.theta_offset_arr[mc_mngr_instance.theta_offset_arr_idx++] = theta_offset;
+				if (mc_mngr_instance.theta_offset_arr_idx >= mc_mngr_instance.theta_offset_arr_size)
 				{
-					mc_mngr_instance.id_setpoint = 0.0f;
-					mc_mngr_instance.iq_setpoint = 200.0f;
+					mc_mngr_instance.theta_offset_arr_idx = 0u;
+				}
+				mc_mngr_instance.transition_time_tick_counter++;
+				if (mc_mngr_instance.transition_time_tick_counter >= mc_mngr_instance.transition_time_ticks)
+				{
+					mc_mngr_instance.theta_offset = calculate_theta_offset();
+					mc_mngr_instance.theta_offset_calculated = TRUE;
+				}
+			}
+			else
+			{
+				mc_mngr_instance.theta_ref = pll_get_est_theta(pll) + mc_mngr_instance.theta_offset;
+				CONSTRAIN_ANGLE_RAD_ZERO_TWO_PI(mc_mngr_instance.theta_ref);
+				mc_mngr_instance.theta_ref_log = mc_mngr_instance.theta_ref;
+				mc_mngr_instance.theta_offset *= 0.9995;
+				if(fabsf(mc_mngr_instance.theta_offset) < 0.1f)
+				{
+					velocity_controller_reset(velocity_controller);
+					velocity_controller_set_target_velocity(velocity_controller, mc_mngr_instance.velocity_setpoint);
 					mc_mngr_instance.mc_state = MC_STATE_CLOSED_LOOP;
 				}
 			}
@@ -168,10 +187,12 @@ static void motor_control_state_machine(void)
 		}
 		case MC_STATE_CLOSED_LOOP:
 		{
-			current_controller_set_target_id(current_controller, mc_mngr_instance.id_setpoint);
-			current_controller_set_target_iq(current_controller, mc_mngr_instance.iq_setpoint);
+			float_t iq_ref = velocity_controller_get_current_out(velocity_controller);
+			current_controller_set_target_id(current_controller, 0.0f);
+			current_controller_set_target_iq(current_controller, iq_ref);
 			float_t theta = pll_get_est_theta(pll);
-			mc_mngr_instance.theta_ref = theta;
+			mc_mngr_instance.theta_ref = theta + mc_mngr_instance.theta_offset;
+			mc_mngr_instance.theta_ref_log = mc_mngr_instance.theta_ref;
 			break;
 		}
 		case MC_STATE_ERROR:
@@ -188,7 +209,19 @@ static void motor_control_task(mc_callback_param_t param)
 //========================================================================
 	// 0. Measure and control velocity
 	velocity_measure_process(velocity_measure, pll_get_est_omega(pll));
-	velocity_controller_process(velocity_controller, velocity_measure_get_rpm(velocity_measure));
+	static uint32_t speed_div = 0;
+	if(mc_mngr_instance.mc_state == MC_STATE_CLOSED_LOOP)
+	{
+		if(++speed_div >= 4)
+		{
+			speed_div = 0;
+			velocity_controller_process(velocity_controller,velocity_measure_get_rpm(velocity_measure));
+		}
+	}
+	else
+	{
+		speed_div = 0u;
+	}
 
 //========================================================================
 	// 1. Convert ADC current values to milliamps

@@ -14,7 +14,7 @@ struct __attribute__((packed)) foc_monitor_frame {
     int32_t		iq_mA;
     float_t  	emf_alpha;
     float_t		emf_beta;
-    float_t		theta_pll_rad;
+    float_t		theta_observer_rad;
     float_t		theta_ref_log_rad;
     float_t		theta_real_rad;
     float_t  	velocity_pll_rpm;

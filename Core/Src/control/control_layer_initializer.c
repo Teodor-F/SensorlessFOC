@@ -19,6 +19,23 @@ static lpf_first_order_t lpf_iq_istance = {0};
 
 void control_layer_initializer(void)
 {
+
+//========================================================================
+	// Velocity controller initialization
+	uint32_t motor_max_rpm = motor_cfg_get_motor_max_rpm();
+	velocity_controller_cfg_t velocity_cntrl_cfg = {
+		.kp = 0.035,
+		.ki = 55.5f,
+		.velocity_ref_limit = motor_max_rpm,
+		.iq_max_out = 1000.0f,
+		.ts = 0.00025f
+	};
+	velocity_controller_init(&velocity_cntrl_instance, &velocity_cntrl_cfg);
+	velocity_controller = &velocity_cntrl_instance;
+
+//========================================================================
+	// Current controller initialization
+
 	lpf_first_order_cfg_t lpf_id_iq_cfg = {
 		.cutoff_freq_hz = 10u,
 		.ts = 1.0f / PWM_FREQ_HZ
@@ -28,21 +45,7 @@ void control_layer_initializer(void)
 	lpf_first_order_init(&lpf_iq_istance, &lpf_id_iq_cfg);
 	lpf_iq = &lpf_iq_istance;
 
-//========================================================================
-	// Velocity controller initialization
-	uint32_t motor_max_rpm = motor_cfg_get_motor_max_rpm();
-	velocity_controller_cfg_t velocity_cntrl_cfg = {
-		.kp = 0.025,
-		.ki = 15.0f,
-		.velocity_ref_limit = motor_max_rpm,
-		.iq_max_out = 400.0f,
-		.ts = 1.0f / PWM_FREQ_HZ
-	};
-	velocity_controller_init(&velocity_cntrl_instance, &velocity_cntrl_cfg);
-	velocity_controller = &velocity_cntrl_instance;
 
-//========================================================================
-	// Current controller initialization
 	float_t motor_nominal_voltage = motor_cfg_get_motor_nom_voltage();
 	float_t motor_stator_resistance = motor_cfg_get_motor_stator_resistance();
 	float_t motor_stator_inductance =  motor_cfg_get_motor_stator_inductance();
