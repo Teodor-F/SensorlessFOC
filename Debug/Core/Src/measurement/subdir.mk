@@ -9,7 +9,6 @@ C_SRCS += \
 ../Core/Src/measurement/measurement_layer_initializer.c \
 ../Core/Src/measurement/pll.c \
 ../Core/Src/measurement/sliding_mode_observer.c \
-../Core/Src/measurement/smo.c \
 ../Core/Src/measurement/velocity_measure.c 
 
 OBJS += \
@@ -17,7 +16,6 @@ OBJS += \
 ./Core/Src/measurement/measurement_layer_initializer.o \
 ./Core/Src/measurement/pll.o \
 ./Core/Src/measurement/sliding_mode_observer.o \
-./Core/Src/measurement/smo.o \
 ./Core/Src/measurement/velocity_measure.o 
 
 C_DEPS += \
@@ -25,7 +23,6 @@ C_DEPS += \
 ./Core/Src/measurement/measurement_layer_initializer.d \
 ./Core/Src/measurement/pll.d \
 ./Core/Src/measurement/sliding_mode_observer.d \
-./Core/Src/measurement/smo.d \
 ./Core/Src/measurement/velocity_measure.d 
 
 
@@ -36,7 +33,7 @@ Core/Src/measurement/%.o Core/Src/measurement/%.su Core/Src/measurement/%.cyclo:
 clean: clean-Core-2f-Src-2f-measurement
 
 clean-Core-2f-Src-2f-measurement:
-	-$(RM) ./Core/Src/measurement/current_measure.cyclo ./Core/Src/measurement/current_measure.d ./Core/Src/measurement/current_measure.o ./Core/Src/measurement/current_measure.su ./Core/Src/measurement/measurement_layer_initializer.cyclo ./Core/Src/measurement/measurement_layer_initializer.d ./Core/Src/measurement/measurement_layer_initializer.o ./Core/Src/measurement/measurement_layer_initializer.su ./Core/Src/measurement/pll.cyclo ./Core/Src/measurement/pll.d ./Core/Src/measurement/pll.o ./Core/Src/measurement/pll.su ./Core/Src/measurement/sliding_mode_observer.cyclo ./Core/Src/measurement/sliding_mode_observer.d ./Core/Src/measurement/sliding_mode_observer.o ./Core/Src/measurement/sliding_mode_observer.su ./Core/Src/measurement/smo.cyclo ./Core/Src/measurement/smo.d ./Core/Src/measurement/smo.o ./Core/Src/measurement/smo.su ./Core/Src/measurement/velocity_measure.cyclo ./Core/Src/measurement/velocity_measure.d ./Core/Src/measurement/velocity_measure.o ./Core/Src/measurement/velocity_measure.su
+	-$(RM) ./Core/Src/measurement/current_measure.cyclo ./Core/Src/measurement/current_measure.d ./Core/Src/measurement/current_measure.o ./Core/Src/measurement/current_measure.su ./Core/Src/measurement/measurement_layer_initializer.cyclo ./Core/Src/measurement/measurement_layer_initializer.d ./Core/Src/measurement/measurement_layer_initializer.o ./Core/Src/measurement/measurement_layer_initializer.su ./Core/Src/measurement/pll.cyclo ./Core/Src/measurement/pll.d ./Core/Src/measurement/pll.o ./Core/Src/measurement/pll.su ./Core/Src/measurement/sliding_mode_observer.cyclo ./Core/Src/measurement/sliding_mode_observer.d ./Core/Src/measurement/sliding_mode_observer.o ./Core/Src/measurement/sliding_mode_observer.su ./Core/Src/measurement/velocity_measure.cyclo ./Core/Src/measurement/velocity_measure.d ./Core/Src/measurement/velocity_measure.o ./Core/Src/measurement/velocity_measure.su
 
 .PHONY: clean-Core-2f-Src-2f-measurement
 

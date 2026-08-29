@@ -33,9 +33,9 @@ void control_layer_initializer(void)
 	uint32_t motor_max_rpm = motor_cfg_get_motor_max_rpm();
 	velocity_controller_cfg_t velocity_cntrl_cfg = {
 		.kp = 0.025,
-		.ki = 85.0f,
+		.ki = 15.0f,
 		.velocity_ref_limit = motor_max_rpm,
-		.iq_max_out = 1250.0f,
+		.iq_max_out = 400.0f,
 		.ts = 1.0f / PWM_FREQ_HZ
 	};
 	velocity_controller_init(&velocity_cntrl_instance, &velocity_cntrl_cfg);

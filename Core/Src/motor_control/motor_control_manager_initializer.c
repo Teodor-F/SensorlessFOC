@@ -12,7 +12,7 @@ void motor_control_manager_initializer(void)
 		.open_loop_id = 0.0f,
 		.open_loop_iq = 1500,
 		.transition_time = 300u,
-		.transition_iq = 750.0f
+		.transition_iq = 900.0f
 	};
 
 	motor_control_manager_init(&mc_mngr_cfg);

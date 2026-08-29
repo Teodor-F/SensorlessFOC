@@ -17,7 +17,6 @@
 "./Core/Src/measurement/measurement_layer_initializer.o"
 "./Core/Src/measurement/pll.o"
 "./Core/Src/measurement/sliding_mode_observer.o"
-"./Core/Src/measurement/smo.o"
 "./Core/Src/measurement/velocity_measure.o"
 "./Core/Src/motor_control/motor_control.o"
 "./Core/Src/motor_control/motor_control_manager.o"

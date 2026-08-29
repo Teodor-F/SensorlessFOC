@@ -28,7 +28,7 @@ void measurement_layer_initializer(void)
 	// Velocity measurement initialization
 	lpf_first_order_cfg_t velocity_measure_lpf_cfg = {
 		.cutoff_freq_hz = 10.0f,
-		.ts = 1.0f / PWM_FREQ_HZ
+		.ts = 1.0f / PWM_FREQ_HZ,
 	};
 	lpf_first_order_init(&velocity_measure_lpf, &velocity_measure_lpf_cfg);
 

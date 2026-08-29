@@ -23,7 +23,7 @@ struct velocity_measure {
 
 void velocity_measure_init(velocity_measure_t *const instance, velocity_measure_config_t *cfg);
 
-void velocity_measure_process(velocity_measure_t *const instance, float_t omega_rad_s);
+void velocity_measure_process(velocity_measure_t *const instance, float_t omega_electrical_rad_s);
 
 float_t velocity_measure_get_rpm(velocity_measure_t *const instance);
 
