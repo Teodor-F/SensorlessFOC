@@ -1,4 +1,3 @@
-#include <config/motor_cfg.h>
 #include <pi_controller.h>
 #include <numeric_constants.h>
 
@@ -20,7 +19,7 @@ float pi_controller_process(pi_controller_t* const instance, float error)
 	float ret_val = 0.0f;
 
 	float p_term = instance->kp * error;
-	float i_term_temp = instance->integral +instance->ki_ts_by_two * (error + instance->prev_error);
+	float i_term_temp = instance->integral + instance->ki_ts_by_two * (error + instance->prev_error);
 	float output = instance->kp * error + i_term_temp;
 
 	if(output < instance->output_max &&	output > instance->output_min)
@@ -42,6 +41,12 @@ float pi_controller_process(pi_controller_t* const instance, float error)
 	ret_val = instance->output;
 	return ret_val;
 }
+
+void pi_controller_set_integral(pi_controller_t* const instance, float integral)
+{
+	instance->integral = integral;
+}
+
 
 void pi_controller_reset(pi_controller_t* const instance)
 {

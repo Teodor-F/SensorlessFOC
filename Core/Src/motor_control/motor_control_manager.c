@@ -52,6 +52,16 @@ static float_t calculate_theta_offset(void)
 	return ret_val;
 }
 
+static inline float_t constrain_angle(float_t angle)
+{
+	float_t ret_val = angle;
+	if(fabsf(angle) >= CONSTANT_TWO_PI)
+	{
+		ret_val = 0.0f;
+	}
+	return ret_val;
+}
+
 static void communication_task(mc_callback_param_t param)
 {
 	(void)param;
@@ -71,7 +81,7 @@ static void communication_task(mc_callback_param_t param)
 		lpf_first_order_process(lpf_iq, curr_q);
 
 		sliding_mode_observer_emf_est_t emf_alpha_beta = sliding_mode_observer_get_emfs(smo);
-		float_t theta_observer = pll_get_est_theta(pll);
+		float_t theta_observer = sliding_mode_observer_get_electrical_angle(smo);
 
 		monitor_frame.header = FOC_FRAME_HEADER;
 		monitor_frame.ia_mA = curr_abc.curr_a;
@@ -83,7 +93,7 @@ static void communication_task(mc_callback_param_t param)
 		monitor_frame.emf_beta = emf_alpha_beta.emf_beta;
 		monitor_frame.theta_real_rad = mc_mngr_instance.theta_open_loop;
 		monitor_frame.theta_observer_rad = theta_observer;
-		monitor_frame.theta_ref_log_rad = mc_mngr_instance.theta_ref_log;
+		monitor_frame.theta_ref_log_rad = 0.0f;
 		monitor_frame.velocity_pll_rpm = velocity_measure_get_rpm(velocity_measure);
 		monitor_frame.velocity_setpoint = mc_mngr_instance.velocity_setpoint;
 		foc_telemetry_ready = true;
@@ -109,7 +119,7 @@ static void motor_control_state_machine(void)
 		{
 			mc_mngr_instance.theta_ref = 0.0f;
 			mc_mngr_instance.theta_ref_log = 0.0f;
-			current_controller_set_target_id(current_controller, 0.0f);
+			current_controller_set_target_id(current_controller, mc_mngr_instance.cfg.aligment_iq);
 			current_controller_set_target_iq(current_controller, mc_mngr_instance.cfg.aligment_iq);
 			mc_mngr_instance.aligment_tick_counter++;
 			if(mc_mngr_instance.aligment_tick_counter >= mc_mngr_instance.aligment_ticks)
@@ -117,7 +127,7 @@ static void motor_control_state_machine(void)
 				mc_mngr_instance.aligment_tick_counter = 0u;
 				mc_mngr_instance.theta_open_loop = 0.0f;
 				mc_mngr_instance.omega_open_loop = 0.0f;
-				current_controller_set_target_iq(current_controller, 0.0f);
+				current_controller_set_target_id(current_controller,  mc_mngr_instance.cfg.open_loop_id);
 				current_controller_set_target_iq(current_controller, mc_mngr_instance.cfg.open_loop_iq);
 				mc_mngr_instance.mc_state = MC_STATE_OPEN_LOOP;
 			}
@@ -132,14 +142,12 @@ static void motor_control_state_machine(void)
 			{
 				mc_mngr_instance.omega_open_loop = mc_mngr_instance.open_loop_omega_max;
 				current_controller_set_target_iq(current_controller, mc_mngr_instance.cfg.transition_iq);
-				mc_mngr_instance.theta_offset_arr_idx = 0u;
 				mc_mngr_instance.transition_time_tick_counter = 0u;
-				mc_mngr_instance.theta_offset_calculated = FALSE;
 				mc_mngr_instance.mc_state = MC_STATE_TRANSITION;
 			}
 
 			mc_mngr_instance.theta_open_loop += mc_mngr_instance.omega_coeff * mc_mngr_instance.omega_open_loop * mc_mngr_instance.sampling_time;
-			CONSTRAIN_ANGLE_RAD_ZERO_TWO_PI(mc_mngr_instance.theta_open_loop);
+			mc_mngr_instance.theta_open_loop = constrain_angle(mc_mngr_instance.theta_open_loop);
 			mc_mngr_instance.theta_ref = mc_mngr_instance.theta_open_loop;
 			mc_mngr_instance.theta_ref_log = mc_mngr_instance.theta_ref;
 
@@ -149,50 +157,25 @@ static void motor_control_state_machine(void)
 		// Let the observer stabilize for a predefined time
 		case MC_STATE_TRANSITION:
 		{
-			if (mc_mngr_instance.theta_offset_calculated == FALSE)
-			{
-				mc_mngr_instance.theta_open_loop += mc_mngr_instance.omega_coeff * mc_mngr_instance.omega_open_loop * mc_mngr_instance.sampling_time;
-				CONSTRAIN_ANGLE_RAD_ZERO_TWO_PI(mc_mngr_instance.theta_open_loop);
-				mc_mngr_instance.theta_ref = mc_mngr_instance.theta_open_loop;
+			mc_mngr_instance.theta_open_loop += mc_mngr_instance.omega_coeff * mc_mngr_instance.omega_open_loop * mc_mngr_instance.sampling_time;
+			mc_mngr_instance.theta_open_loop = constrain_angle(mc_mngr_instance.theta_open_loop);
+			mc_mngr_instance.theta_ref = mc_mngr_instance.theta_open_loop;
+			mc_mngr_instance.theta_ref_log = mc_mngr_instance.theta_ref;
 
-				float_t theta_offset = mc_mngr_instance.theta_open_loop - pll_get_est_theta(pll);
-				CONSTAIN_ANGLE_RAD_MINUS_PI_PI(theta_offset);
-
-				mc_mngr_instance.theta_offset_arr[mc_mngr_instance.theta_offset_arr_idx++] = theta_offset;
-				if (mc_mngr_instance.theta_offset_arr_idx >= mc_mngr_instance.theta_offset_arr_size)
-				{
-					mc_mngr_instance.theta_offset_arr_idx = 0u;
-				}
-				mc_mngr_instance.transition_time_tick_counter++;
-				if (mc_mngr_instance.transition_time_tick_counter >= mc_mngr_instance.transition_time_ticks)
-				{
-					mc_mngr_instance.theta_offset = calculate_theta_offset();
-					mc_mngr_instance.theta_offset_calculated = TRUE;
-				}
-			}
-			else
+			mc_mngr_instance.transition_time_tick_counter++;
+			if (mc_mngr_instance.transition_time_tick_counter >= mc_mngr_instance.transition_time_ticks && sliding_mode_observer_is_locked(smo))
 			{
-				mc_mngr_instance.theta_ref = pll_get_est_theta(pll) + mc_mngr_instance.theta_offset;
-				CONSTRAIN_ANGLE_RAD_ZERO_TWO_PI(mc_mngr_instance.theta_ref);
-				mc_mngr_instance.theta_ref_log = mc_mngr_instance.theta_ref;
-				mc_mngr_instance.theta_offset *= 0.9995;
-				if(fabsf(mc_mngr_instance.theta_offset) < 0.1f)
-				{
-					velocity_controller_reset(velocity_controller);
-					velocity_controller_set_target_velocity(velocity_controller, mc_mngr_instance.velocity_setpoint);
-					mc_mngr_instance.mc_state = MC_STATE_CLOSED_LOOP;
-				}
+				float_t transition_velocity = velocity_measure_get_rpm(velocity_measure);
+				velocity_controller_set_target_velocity(velocity_controller, transition_velocity);
+				velocity_controller_set_initial_value(velocity_controller, mc_mngr_instance.cfg.transition_iq);
+				mc_mngr_instance.transition_time_tick_counter = 0u;
+				mc_mngr_instance.mc_state = MC_STATE_CLOSED_LOOP;
 			}
 			break;
 		}
 		case MC_STATE_CLOSED_LOOP:
 		{
-			float_t iq_ref = velocity_controller_get_current_out(velocity_controller);
-			current_controller_set_target_id(current_controller, 0.0f);
-			current_controller_set_target_iq(current_controller, iq_ref);
-			float_t theta = pll_get_est_theta(pll);
-			mc_mngr_instance.theta_ref = theta + mc_mngr_instance.theta_offset;
-			mc_mngr_instance.theta_ref_log = mc_mngr_instance.theta_ref;
+			mc_mngr_instance.theta_ref = sliding_mode_observer_get_electrical_angle(smo);
 			break;
 		}
 		case MC_STATE_ERROR:
@@ -205,23 +188,6 @@ static void motor_control_state_machine(void)
 static void motor_control_task(mc_callback_param_t param)
 {
 	(void)param;
-
-//========================================================================
-	// 0. Measure and control velocity
-	velocity_measure_process(velocity_measure, pll_get_est_omega(pll));
-	static uint32_t speed_div = 0;
-	if(mc_mngr_instance.mc_state == MC_STATE_CLOSED_LOOP)
-	{
-		if(++speed_div >= 4)
-		{
-			speed_div = 0;
-			velocity_controller_process(velocity_controller,velocity_measure_get_rpm(velocity_measure));
-		}
-	}
-	else
-	{
-		speed_div = 0u;
-	}
 
 //========================================================================
 	// 1. Convert ADC current values to milliamps
@@ -242,15 +208,32 @@ static void motor_control_task(mc_callback_param_t param)
 	float_t v_beta;
 	sv_modulation_get_v_alfa_v_beta(sv_modulation, &v_alfa, &v_beta);
 	sliding_mode_observer_process(smo, v_alfa, v_beta, curr_alpha, curr_beta);
-	sliding_mode_observer_emf_est_t smo_emfs = sliding_mode_observer_get_emfs(smo);
-	pll_process_new(pll, smo_emfs.emf_alfa, smo_emfs.emf_beta);
+	velocity_measure_process(velocity_measure, sliding_mode_observer_get_electrical_speed(smo));
 
 //========================================================================
-	// 4. Execute state machine
+	// 4. Measure velocity & control
+	static uint32_t speed_div = 0;
+	if(++speed_div >= 4u)
+	{
+		float_t rpm = velocity_measure_get_rpm(velocity_measure);
+		if(mc_mngr_instance.mc_state == MC_STATE_CLOSED_LOOP)
+		{
+			velocity_controller_process(velocity_controller, rpm);
+			float_t id = 0.0f;
+			float_t iq = velocity_controller_get_current_out(velocity_controller);
+			current_controller_set_target_id(current_controller, id);
+			current_controller_set_target_iq(current_controller, iq);
+
+		}
+		speed_div = 0u;
+	}
+
+//========================================================================
+	// 5. Execute state machine
 	motor_control_state_machine();
 
 //========================================================================
-	// 5. Apply Current controller in dq-frame
+	// 6. Apply Current controller in dq-frame
 	if(mc_mngr_instance.mc_state != MC_STATE_IDLE && mc_mngr_instance.mc_state != MC_STATE_ERROR)
 	{
 		current_controller_process(current_controller, curr_d, curr_q);
@@ -259,7 +242,7 @@ static void motor_control_task(mc_callback_param_t param)
 		mc_mngr_instance.vq_setpoint = curr_cntrl_output.vq;
 	}
 
-//	5. Execute modulation
+//	7. Execute modulation
 	sv_modulation_set_target_vd_vq(sv_modulation, mc_mngr_instance.vd_setpoint, mc_mngr_instance.vq_setpoint);
 	sv_modulation_process(sv_modulation, mc_mngr_instance.theta_ref);
 }
@@ -268,7 +251,7 @@ static void motor_control_task(mc_callback_param_t param)
 void motor_control_manager_init(motor_control_manager_cfg_t const *cfg)
 {
 	mc_mngr_instance.cfg = *cfg;
-	mc_mngr_instance.mc_direction = MC_DIR_CW;
+	mc_mngr_instance.mc_direction = MC_DIR_CCW;
 	mc_mngr_instance.mc_state = MC_STATE_IDLE;
 
 	mc_mngr_instance.sampling_time = (1.0f / mc_mngr_instance.cfg.pwm_freq);

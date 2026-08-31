@@ -27,6 +27,8 @@ void pi_controller_init(pi_controller_t* const instance, const pi_controller_cfg
 
 float pi_controller_process(pi_controller_t* const instance, float error);
 
+void pi_controller_set_integral(pi_controller_t* const instance, float integral);
+
 void pi_controller_reset(pi_controller_t* const instance);
 
 #endif /* PI_CNTROLLER_H_ */

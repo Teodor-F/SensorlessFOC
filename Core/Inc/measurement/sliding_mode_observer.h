@@ -1,7 +1,7 @@
 #ifndef SLIDING_MODE_OBSERVER_H_
 #define SLIDING_MODE_OBSERVER_H_
 
-#define SMO_MOVING_AVG_FILTER_LEN	64u
+#define SMO_MOVING_AVG_FILTER_LEN	128
 
 
 typedef struct sliding_mode_observer_cfg sliding_mode_observer_cfg_t;
@@ -17,6 +17,8 @@ struct sliding_mode_observer_cfg {
 	float k_sliding_gain;
 	float g_emf_gain;
 	float boundary;
+	float emf_threshold;
+	float emf_cntr_threshold;
 };
 
 struct sliding_mode_observer {
@@ -34,6 +36,13 @@ struct sliding_mode_observer {
 	float i_beta_est;
 	float e_alpha_est;
 	float e_beta_est;
+	float e_theta;
+	float e_theta_last;
+	float emf_threshold;
+	uint32_t valid_emf_sample_cntr;
+	uint32_t valid_emf_sample_cntr_threshold;
+	bool_t smo_locked;
+
 	float theta_est;
 	float theta_est_prev;
 	float delta_theta_buf[SMO_MOVING_AVG_FILTER_LEN];
@@ -66,4 +75,5 @@ float sliding_mode_observer_get_electrical_angle(sliding_mode_observer_t* const 
 
 float sliding_mode_observer_get_electrical_speed(sliding_mode_observer_t* const instance);
 
+bool_t sliding_mode_observer_is_locked(sliding_mode_observer_t* const instance);
 #endif /* SLIDING_MODE_OBSERVER_H_ */

@@ -44,6 +44,9 @@ void sliding_mode_observer_init(sliding_mode_observer_t* const instance, const s
 	instance->i_beta_est = 0.0f;
 	instance->e_alpha_est = 0.0f;
 	instance->e_beta_est = 0.0f;
+	instance->emf_threshold = cfg->emf_threshold;
+	instance->valid_emf_sample_cntr_threshold = cfg->emf_cntr_threshold;
+
 	instance->theta_est = 0.0f;
 	instance->theta_est_prev = 0.0f;
 	instance->omega_est = 0.0f;
@@ -91,12 +94,34 @@ void sliding_mode_observer_process(sliding_mode_observer_t* const instance, floa
 
 //	// 6. Estimate the rotor's electrical angle and -speed
 	instance->emf_mag = sqrtf(instance->e_alpha_est * instance->e_alpha_est + instance->e_beta_est * instance->e_beta_est);
-	if (instance->emf_mag > 500.0f)
+	if (instance->emf_mag > instance->emf_threshold)
 	{
-		instance->theta_est = -atan2f(instance->e_alpha_est, instance->e_beta_est);
-		CONSTRAIN_ANGLE_RAD_ZERO_TWO_PI(instance->theta_est);
+		instance->valid_emf_sample_cntr++;
+		if(instance->valid_emf_sample_cntr >= instance->valid_emf_sample_cntr_threshold)
+		{
+			instance->smo_locked = true;
+		}
 
-		float delta_theta = instance->theta_est - instance->theta_est_prev;
+		instance->e_theta = atan2f(instance->e_beta_est, instance->e_alpha_est);
+		if(instance->omega_est > 0.0f)
+		{
+			instance->theta_est = instance->e_theta - (CONSTANT_PI * ONE_BY_TWO);
+		}
+		else
+		{
+			instance->theta_est = instance->e_theta + (CONSTANT_PI * ONE_BY_TWO);
+		}
+
+		if(instance->theta_est < 0.0f)
+		{
+			instance->theta_est += CONSTANT_TWO_PI;
+		}
+		else if(instance->theta_est > CONSTANT_TWO_PI)
+		{
+			instance->theta_est -= CONSTANT_TWO_PI;
+		}
+
+		float delta_theta = instance->e_theta - instance->e_theta_last;
 
 		if (delta_theta >= CONSTANT_PI)
 		{
@@ -106,7 +131,6 @@ void sliding_mode_observer_process(sliding_mode_observer_t* const instance, floa
 		{
 			delta_theta += CONSTANT_TWO_PI;
 		}
-		instance->theta_est_prev = instance->theta_est;
 		instance->delta_theta_sum -= instance->delta_theta_buf[instance->idx];
 		instance->delta_theta_buf[instance->idx] = delta_theta;
 		instance->delta_theta_sum += delta_theta;
@@ -116,6 +140,12 @@ void sliding_mode_observer_process(sliding_mode_observer_t* const instance, floa
 			instance->idx = 0;
 		}
 		instance->omega_est = instance->delta_theta_sum * instance->inv_n_ts;
+		instance->e_theta_last = instance->e_theta;
+	}
+	else
+	{
+		instance->valid_emf_sample_cntr = 0u;
+		instance->smo_locked = false;
 	}
 }
 
@@ -158,5 +188,13 @@ float sliding_mode_observer_get_electrical_speed(sliding_mode_observer_t* const 
 	ret_val = instance->omega_est;
 	return ret_val;
 }
+
+bool_t sliding_mode_observer_is_locked(sliding_mode_observer_t* const instance)
+{
+	assert(instance != NULL);
+	bool_t ret_val = instance->smo_locked;
+	return ret_val;
+}
+
 
 

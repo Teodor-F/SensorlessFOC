@@ -1,7 +1,8 @@
 ../Core/Src/measurement/sliding_mode_observer.c:6:21:sliding_function	3
 ../Core/Src/measurement/sliding_mode_observer.c:26:6:sliding_mode_observer_init	2
-../Core/Src/measurement/sliding_mode_observer.c:63:6:sliding_mode_observer_process	7
-../Core/Src/measurement/sliding_mode_observer.c:122:6:sliding_mode_observer_reset	1
-../Core/Src/measurement/sliding_mode_observer.c:138:33:sliding_mode_observer_get_emfs	1
-../Core/Src/measurement/sliding_mode_observer.c:146:7:sliding_mode_observer_get_electrical_angle	1
-../Core/Src/measurement/sliding_mode_observer.c:154:7:sliding_mode_observer_get_electrical_speed	1
+../Core/Src/measurement/sliding_mode_observer.c:66:6:sliding_mode_observer_process	9
+../Core/Src/measurement/sliding_mode_observer.c:152:6:sliding_mode_observer_reset	1
+../Core/Src/measurement/sliding_mode_observer.c:168:33:sliding_mode_observer_get_emfs	1
+../Core/Src/measurement/sliding_mode_observer.c:176:7:sliding_mode_observer_get_electrical_angle	1
+../Core/Src/measurement/sliding_mode_observer.c:184:7:sliding_mode_observer_get_electrical_speed	1
+../Core/Src/measurement/sliding_mode_observer.c:192:8:sliding_mode_observer_is_locked	1

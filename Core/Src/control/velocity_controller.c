@@ -19,7 +19,7 @@ void velocity_controller_init(velocity_controller_t *const instance, const veloc
 void velocity_controller_process(velocity_controller_t *const instance, float_t velocity_actual)
 {
 	float_t velocity_error = instance->velocity_ref - velocity_actual;
-	instance->iq_out = -pi_controller_process(&instance->velocity_pi_cntrl, velocity_error);
+	instance->iq_out = pi_controller_process(&instance->velocity_pi_cntrl, velocity_error);
 }
 
 void velocity_controller_set_target_velocity(velocity_controller_t *const instance, float_t new_velocity)
@@ -37,6 +37,12 @@ float_t velocity_controller_get_current_out(velocity_controller_t *const instanc
 {
 	float_t ret_val = instance->iq_out;
 	return ret_val;
+}
+
+void velocity_controller_set_initial_value(velocity_controller_t *const instance, float_t initial_value)
+{
+	pi_controller_set_integral(&instance->velocity_pi_cntrl, initial_value);
+	instance->iq_out = initial_value;
 }
 
 void velocity_controller_reset(velocity_controller_t *const instance)

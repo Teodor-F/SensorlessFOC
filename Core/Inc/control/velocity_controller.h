@@ -32,6 +32,8 @@ float_t velocity_controller_get_target_velocity(velocity_controller_t *const ins
 
 float_t velocity_controller_get_current_out(velocity_controller_t *const instance);
 
+void velocity_controller_set_initial_value(velocity_controller_t *const instance, float_t initial_value);
+
 void velocity_controller_reset(velocity_controller_t *const instance);
 
 #endif /* VELOCITY_CONTROLLER_H_ */

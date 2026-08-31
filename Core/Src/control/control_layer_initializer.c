@@ -24,8 +24,8 @@ void control_layer_initializer(void)
 	// Velocity controller initialization
 	uint32_t motor_max_rpm = motor_cfg_get_motor_max_rpm();
 	velocity_controller_cfg_t velocity_cntrl_cfg = {
-		.kp = 0.035,
-		.ki = 55.5f,
+		.kp = 1.25f,
+		.ki = 3.75f,
 		.velocity_ref_limit = motor_max_rpm,
 		.iq_max_out = 1000.0f,
 		.ts = 0.00025f
@@ -37,7 +37,7 @@ void control_layer_initializer(void)
 	// Current controller initialization
 
 	lpf_first_order_cfg_t lpf_id_iq_cfg = {
-		.cutoff_freq_hz = 10u,
+		.cutoff_freq_hz = 50u,
 		.ts = 1.0f / PWM_FREQ_HZ
 	};
 	lpf_first_order_init(&lpf_id_instance, &lpf_id_iq_cfg);
@@ -51,10 +51,10 @@ void control_layer_initializer(void)
 	float_t motor_stator_inductance =  motor_cfg_get_motor_stator_inductance();
 	float_t motor_max_current = motor_cfg_get_motor_max_current();
 	current_controller_cfg_t curr_cntrl_cfg = {
-		.kp_id = 0.085,
-		.ki_id = 170.0f,
-		.kp_iq = 0.085,
-		.ki_iq = 170.0f,
+		.kp_id = 0.045,
+		.ki_id = 85.0f,
+		.kp_iq = 0.045,
+		.ki_iq = 85.0f,
 		.vd_out_limit = motor_nominal_voltage * ONE_BY_SQRT_THREE,
 		.vq_out_limit =  motor_nominal_voltage * ONE_BY_SQRT_THREE,
 		.ts = 1.0f / PWM_FREQ_HZ,

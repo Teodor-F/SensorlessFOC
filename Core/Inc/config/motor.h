@@ -5,7 +5,7 @@
 #define MOTOR_MAX_CURRENT_MA			1500.0f
 #define MOTOR_RESISTANCE_MOHM			275.0f
 #define MOTOR_INDUCTANCE_MHENRY			0.135f
-#define MOTOR_MAX_RPM					4000u
+#define MOTOR_MAX_RPM					3000u
 #define MOTOR_POLE_PAIRS 				7u
 #define MOTOR_KV_VALUE					360
 

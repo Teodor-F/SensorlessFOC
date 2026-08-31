@@ -59,7 +59,9 @@ void measurement_layer_initializer(void)
 		.ts = 1.0f / PWM_FREQ_HZ,
 		.boundary = 175.0f,
 		.k_sliding_gain = 60.0f,
-		.g_emf_gain = 0.065f
+		.g_emf_gain = 0.065f,
+		.emf_cntr_threshold = 500u,
+		.emf_threshold = 500.0f
 	};
 	sliding_mode_observer_init(&smo_instance, &smo_cfg);
 
