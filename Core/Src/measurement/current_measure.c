@@ -1,9 +1,5 @@
 #include <current_measure.h>
-#include <adc.h>
-#include <config/motor_cfg.h>
-#include <pwm.h>
-
-
+#include <periph_layer_initializer.h>
 #include <math.h>
 
 
@@ -23,7 +19,7 @@ void current_measure_init(current_measure_t *const instance, const current_measu
 
 void current_measure_process(current_measure_t *const instance)
 {
-	adc_currents_t adc_currs = adc_get_currents();
+	adc_currents_t adc_currs = adc_get_currents(adc);
 
 	float voltage_offset = instance->offset_voltage;
 	float curr_gain = instance->inv_current_gain;

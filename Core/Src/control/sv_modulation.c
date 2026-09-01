@@ -1,11 +1,9 @@
 #include <sv_modulation.h>
-#include <assert.h>
-#include <config/motor_cfg.h>
-
-#include <numeric_constants.h>
 #include <sv_transformations.h>
-#include <pwm.h>
+#include <numeric_constants.h>
 
+#include <periph_layer_initializer.h>
+#include <assert.h>
 
 #define SV_MIN_VBUS 1.0f
 
@@ -81,7 +79,7 @@ void sv_modulation_process(sv_modulation_t *const instance, float electrical_ang
 	uint32_t dc_phase_v = (uint32_t)(dv * PWM_DC_100);
 	uint32_t dc_phase_w = (uint32_t)(dw * PWM_DC_100);
 
-	pwm_set_duty_cycles(dc_phase_u, dc_phase_v, dc_phase_w);
+	pwm_set_duty_cycles(pwm, dc_phase_u, dc_phase_v, dc_phase_w);
 }
 
 void sv_modulation_set_vbus(sv_modulation_t *const instance, const float new_vbus)

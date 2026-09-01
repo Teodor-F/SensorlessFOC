@@ -12,8 +12,6 @@
 	// Communication layer
 volatile bool foc_telemetry_ready = false;
 volatile foc_monitor_frame_t monitor_frame = {0};
-
-
 static motor_control_manager_t mc_mngr_instance = {0};
 
 static float_t get_omega_coeff(motor_control_manager_direction_t dir)
@@ -283,14 +281,14 @@ void motor_control_manager_init(motor_control_manager_cfg_t const *cfg)
 	mc_mngr_instance.theta_offset_arr_size = sizeof(mc_mngr_instance.theta_offset_arr) / sizeof(float_t);
 	mc_mngr_instance.theta_offset_calculated = FALSE;
 
-	mc_timer_register_mc_callback(MCTIMER_CB_IDX_1, communication_task, NULL);
-	mc_timer_register_mc_callback(MCTIMER_CB_IDX_2, motor_control_task, NULL);
-	mc_timer_activate_callback(MCTIMER_CB_IDX_1);
-	mc_timer_activate_callback(MCTIMER_CB_IDX_2);
+	mc_timer_register_mc_callback(mc_timer, MCTIMER_CB_IDX_1, communication_task, NULL);
+	mc_timer_register_mc_callback(mc_timer, MCTIMER_CB_IDX_2, motor_control_task, NULL);
+	mc_timer_activate_callback(mc_timer, MCTIMER_CB_IDX_1);
+	mc_timer_activate_callback(mc_timer, MCTIMER_CB_IDX_2);
 
 	// Synchronize timers
-	mc_timer_start();
-	pwm_start();
+	mc_timer_start(mc_timer);
+	pwm_start(pwm);
 }
 
 

@@ -11,18 +11,19 @@
 #define PWM_TIM						TIM1
 #define PWM_TIM_CLK_HZ				SYS_CLK_HZ
 #define PWM_FREQ_HZ         		16000u
-#define PWM_UH_GPIO_PORT    		GPIOA
-#define PWM_UH_GPIO_PIN				GPIO_PIN_8   /* TIM1_CH1  */
-#define PWM_VH_GPIO_PORT			GPIOA
-#define PWM_VH_GPIO_PIN     		GPIO_PIN_9   /* TIM1_CH2  */
-#define PWM_WH_GPIO_PORT    		GPIOA
-#define PWM_WH_GPIO_PIN     		GPIO_PIN_10  /* TIM1_CH3  */
-#define PWM_UL_GPIO_PORT   			GPIOA
-#define PWM_UL_GPIO_PIN     		GPIO_PIN_7   /* TIM1_CH1N */
-#define PWM_VL_GPIO_PORT    		GPIOB
-#define PWM_VL_GPIO_PIN     		GPIO_PIN_0   /* TIM1_CH2N */
-#define PWM_WL_GPIO_PORT    		GPIOB
-#define PWM_WL_GPIO_PIN     		GPIO_PIN_1   /* TIM1_CH3N */
+#define PWM_PHASE_AH_GPIO_PORT    	GPIOA
+#define PWM_PHASE_AH_GPIO_PIN		GPIO_PIN_8   /* TIM1_CH1  */
+#define PWM_PHASE_BH_GPIO_PORT		GPIOA
+#define PWM_PHASE_BH_GPIO_PIN     	GPIO_PIN_9   /* TIM1_CH2  */
+#define PWM_PHASE_CH_GPIO_PORT    	GPIOA
+#define PWM_PHASE_CH_GPIO_PIN    	GPIO_PIN_10  /* TIM1_CH3  */
+#define PWM_PHASE_AL_GPIO_PORT   	GPIOA
+#define PWM_PHASE_AL_GPIO_PIN     	GPIO_PIN_7   /* TIM1_CH1N */
+#define PWM_PHASE_BL_GPIO_PORT    	GPIOB
+#define PWM_PHASE_BL_GPIO_PIN     	GPIO_PIN_0   /* TIM1_CH2N */
+#define PWM_PHASE_CL_GPIO_PORT    	GPIOB
+#define PWM_PHASE_CL_GPIO_PIN     	GPIO_PIN_1   /* TIM1_CH3N */
+
 #define PWM_ADC_TRIG_DBG_GPIO_PIN	GPIO_PIN_3
 #define	PWM_ADC_TRIG_DBG_GPIO_PORT	GPIOC
 #define PWM_ADC_TRIG_DBG_AF			GPIO_AF2_TIM1
@@ -46,17 +47,17 @@
 
 //========================================================================
 	// ADC
-#define ADC_IU_GPIO_PIN		GPIO_PIN_0
-#define ADC_IU_GPIO_PORT    GPIOA
-#define ADC_IU_CHANNEL      ADC_CHANNEL_1
+#define ADC_CURR_A_GPIO_PIN		GPIO_PIN_0
+#define ADC_CURR_A_GPIO_PORT    GPIOA
+#define ADC_CURR_A_CHANNEL      ADC_CHANNEL_1
 
-#define ADC_IV_GPIO_PIN		GPIO_PIN_1
-#define ADC_IV_GPIO_PORT    GPIOC
-#define ADC_IV_CHANNEL      ADC_CHANNEL_7
+#define ADC_CURR_B_GPIO_PIN		GPIO_PIN_1
+#define ADC_CURR_B_GPIO_PORT    GPIOC
+#define ADC_CURR_B_CHANNEL      ADC_CHANNEL_7
 
-#define ADC_IW_GPIO_PIN		GPIO_PIN_0
-#define ADC_IW_GPIO_PORT    GPIOC
-#define ADC_IW_CHANNEL      ADC_CHANNEL_6
+#define ADC_CURR_C_GPIO_PIN		GPIO_PIN_0
+#define ADC_CURR_C_GPIO_PORT    GPIOC
+#define ADC_CURR_C_CHANNEL      ADC_CHANNEL_6
 
 #define ADC_CLK_ENABLE() 				\
 	do									\

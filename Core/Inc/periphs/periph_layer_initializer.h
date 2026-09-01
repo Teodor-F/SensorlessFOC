@@ -5,6 +5,9 @@
 #include <pwm.h>
 #include <mctimer.h>
 
+extern adc_t *adc;
+extern pwm_t *pwm;
+extern mc_timer_t *mc_timer;
 
 void periphs_layer_initializer(void);
 

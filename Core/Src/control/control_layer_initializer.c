@@ -1,5 +1,4 @@
 #include <control_layer_initializer.h>
-
 #include <motor_cfg.h>
 
 velocity_controller_t *velocity_controller = NULL;
