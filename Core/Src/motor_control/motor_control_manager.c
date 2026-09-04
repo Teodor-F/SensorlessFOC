@@ -10,7 +10,6 @@
 
 //========================================================================
 	// Communication layer
-volatile bool foc_telemetry_ready = false;
 volatile foc_monitor_frame_t monitor_frame = {0};
 static motor_control_manager_t mc_mngr_instance = {0};
 
@@ -81,6 +80,7 @@ static void communication_task(mc_callback_param_t param)
 		sliding_mode_observer_emf_est_t emf_alpha_beta = sliding_mode_observer_get_emfs(smo);
 		float_t theta_observer = sliding_mode_observer_get_electrical_angle(smo);
 
+		foc_monitor_frame_t monitor_frame;
 		monitor_frame.header = FOC_FRAME_HEADER;
 		monitor_frame.ia_mA = curr_abc.curr_a;
 		monitor_frame.ib_mA = curr_abc.curr_b;
@@ -94,7 +94,9 @@ static void communication_task(mc_callback_param_t param)
 		monitor_frame.theta_ref_log_rad = 0.0f;
 		monitor_frame.velocity_pll_rpm = velocity_measure_get_rpm(velocity_measure);
 		monitor_frame.velocity_setpoint = mc_mngr_instance.velocity_setpoint;
-		foc_telemetry_ready = true;
+
+
+		uart_transmit(uart, (const uint8_t*)&monitor_frame, sizeof(foc_monitor_frame_t));
 	}
 	uart_comm_sw_delay++;
 }

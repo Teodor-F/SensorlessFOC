@@ -9,6 +9,8 @@ static pwm_t pwm_instance;
 mc_timer_t *mc_timer = NULL;
 static mc_timer_t mc_timer_instance;
 
+uart_t *uart = NULL;
+static uart_t uart_instance;
 
 void periphs_layer_initializer(void)
 {
@@ -26,4 +28,10 @@ void periphs_layer_initializer(void)
 	// Motor control timer initialization
 	mc_timer_init(&mc_timer_instance);
 	mc_timer = &mc_timer_instance;
+
+//========================================================================
+	// UART initialization
+	uart_init(&uart_instance);
+	uart = &uart_instance;
 }
+
