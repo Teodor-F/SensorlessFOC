@@ -4,6 +4,9 @@
 velocity_controller_t *velocity_controller = NULL;
 static velocity_controller_t velocity_cntrl_instance = {0};
 
+current_transformation_t *current_transformation = NULL;
+static current_transformation_t curr_trans_instance = {0};
+
 current_controller_t *current_controller = NULL;
 static current_controller_t curr_cntrl_instance = {0};
 
@@ -32,11 +35,17 @@ void control_layer_initializer(void)
 	velocity_controller_init(&velocity_cntrl_instance, &velocity_cntrl_cfg);
 	velocity_controller = &velocity_cntrl_instance;
 
+
+//========================================================================
+	// Current transformation initialization
+	current_transformation_init(&curr_trans_instance);
+	current_transformation = &curr_trans_instance;
+
 //========================================================================
 	// Current controller initialization
 
 	lpf_first_order_cfg_t lpf_id_iq_cfg = {
-		.cutoff_freq_hz = 50u,
+		.cutoff_freq_hz = 30,
 		.ts = 1.0f / PWM_FREQ_HZ
 	};
 	lpf_first_order_init(&lpf_id_instance, &lpf_id_iq_cfg);

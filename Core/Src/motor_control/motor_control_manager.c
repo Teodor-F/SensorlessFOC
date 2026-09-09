@@ -8,9 +8,8 @@
 #include <foc_monitor.h>
 
 
-//========================================================================
-	// Communication layer
-volatile foc_monitor_frame_t monitor_frame = {0};
+#define ONE_SECOND_IN_NANOSECONDS ((uint32_t)(1000000000u))
+
 static motor_control_manager_t mc_mngr_instance = {0};
 
 static float_t get_omega_coeff(motor_control_manager_direction_t dir)
@@ -37,17 +36,7 @@ static inline bool_t ready_for_transition(void)
 	return ret_val;
 }
 
-static float_t calculate_theta_offset(void)
-{
-	float_t ret_val = 0.0f;
-	float_t sum = 0.0f;
-	for (uint32_t idx = 0; idx < mc_mngr_instance.theta_offset_arr_size; ++idx)
-	{
-		sum += mc_mngr_instance.theta_offset_arr[idx];
-	}
-	ret_val = sum /=  mc_mngr_instance.theta_offset_arr_size;
-	return ret_val;
-}
+
 
 static inline float_t constrain_angle(float_t angle)
 {
@@ -59,6 +48,8 @@ static inline float_t constrain_angle(float_t angle)
 	return ret_val;
 }
 
+
+
 static void communication_task(mc_callback_param_t param)
 {
 	(void)param;
@@ -68,19 +59,13 @@ static void communication_task(mc_callback_param_t param)
 		uart_comm_sw_delay = 0u;
 
 		current_measure_act_curr_t curr_abc = current_measure_get_currents(current_measure);
-		float_t curr_alpha;
-		float_t curr_beta;
-		sv_clarke_transform(curr_abc.curr_a, curr_abc.curr_b, curr_abc.curr_c, &curr_alpha, &curr_beta);
-		float_t curr_d;
-		float_t curr_q;
-		sv_park_transform(curr_alpha, curr_beta, sinf(mc_mngr_instance.theta_ref), cosf(mc_mngr_instance.theta_ref), &curr_d, &curr_q);
-		lpf_first_order_process(lpf_id, curr_d);
-		lpf_first_order_process(lpf_iq, curr_q);
-
+		current_transformation_curr_t curr_clarke_park = current_transformation_get_currents(current_transformation);
+		lpf_first_order_process(lpf_id, curr_clarke_park.current_d);
+		lpf_first_order_process(lpf_iq,  curr_clarke_park.current_q);
 		sliding_mode_observer_emf_est_t emf_alpha_beta = sliding_mode_observer_get_emfs(smo);
-		float_t theta_observer = sliding_mode_observer_get_electrical_angle(smo);
+		float_t theta_smo = sliding_mode_observer_get_electrical_angle(smo);
 
-		foc_monitor_frame_t monitor_frame;
+		static foc_monitor_frame_t monitor_frame = {0};
 		monitor_frame.header = FOC_FRAME_HEADER;
 		monitor_frame.ia_mA = curr_abc.curr_a;
 		monitor_frame.ib_mA = curr_abc.curr_b;
@@ -90,7 +75,7 @@ static void communication_task(mc_callback_param_t param)
 		monitor_frame.emf_alpha = emf_alpha_beta.emf_alfa;
 		monitor_frame.emf_beta = emf_alpha_beta.emf_beta;
 		monitor_frame.theta_real_rad = mc_mngr_instance.theta_open_loop;
-		monitor_frame.theta_observer_rad = theta_observer;
+		monitor_frame.theta_observer_rad = theta_smo;
 		monitor_frame.theta_ref_log_rad = 0.0f;
 		monitor_frame.velocity_pll_rpm = velocity_measure_get_rpm(velocity_measure);
 		monitor_frame.velocity_setpoint = mc_mngr_instance.velocity_setpoint;
@@ -100,6 +85,18 @@ static void communication_task(mc_callback_param_t param)
 	}
 	uart_comm_sw_delay++;
 }
+
+
+static void motor_control_task_1(mc_callback_param_t mc_task_1_param)
+{
+	__NOP();
+}
+
+static void motor_control_task_2(mc_callback_param_t mc_task_2_param)
+{
+	__NOP();
+}
+
 
 
 static void motor_control_state_machine(void)
@@ -163,7 +160,7 @@ static void motor_control_state_machine(void)
 			mc_mngr_instance.theta_ref_log = mc_mngr_instance.theta_ref;
 
 			mc_mngr_instance.transition_time_tick_counter++;
-			if (mc_mngr_instance.transition_time_tick_counter >= mc_mngr_instance.transition_time_ticks && sliding_mode_observer_is_locked(smo))
+			if (mc_mngr_instance.transition_time_tick_counter >= mc_mngr_instance.transition_time_ticks)
 			{
 				float_t transition_velocity = velocity_measure_get_rpm(velocity_measure);
 				velocity_controller_set_target_velocity(velocity_controller, transition_velocity);
@@ -195,19 +192,14 @@ static void motor_control_task(mc_callback_param_t param)
 	current_measure_act_curr_t curr_abc = current_measure_get_currents(current_measure);
 //========================================================================
 	// 2. Clarke- & Park Transformation
-	float_t curr_alpha;
-	float_t curr_beta;
-	sv_clarke_transform(curr_abc.curr_a, curr_abc.curr_b, curr_abc.curr_c, &curr_alpha, &curr_beta);
-	float_t curr_d;
-	float_t curr_q;
-	sv_park_transform(curr_alpha, curr_beta, sinf(mc_mngr_instance.theta_ref), cosf(mc_mngr_instance.theta_ref), &curr_d, &curr_q);
-
+	current_transformation_process(current_transformation, curr_abc.curr_a,  curr_abc.curr_b,  curr_abc.curr_c, mc_mngr_instance.theta_ref);
+	current_transformation_curr_t curr_transformed = current_transformation_get_currents(current_transformation);
 //========================================================================
-	// 3. Sliding mode observer & PLL
+	// 3. Sliding mode observer
 	float_t v_alfa;
 	float_t v_beta;
 	sv_modulation_get_v_alfa_v_beta(sv_modulation, &v_alfa, &v_beta);
-	sliding_mode_observer_process(smo, v_alfa, v_beta, curr_alpha, curr_beta);
+	sliding_mode_observer_process(smo, v_alfa, v_beta, curr_transformed.current_alfa, curr_transformed.current_beta);
 	velocity_measure_process(velocity_measure, sliding_mode_observer_get_electrical_speed(smo));
 
 //========================================================================
@@ -236,7 +228,7 @@ static void motor_control_task(mc_callback_param_t param)
 	// 6. Apply Current controller in dq-frame
 	if(mc_mngr_instance.mc_state != MC_STATE_IDLE && mc_mngr_instance.mc_state != MC_STATE_ERROR)
 	{
-		current_controller_process(current_controller, curr_d, curr_q);
+		current_controller_process(current_controller, curr_transformed.current_d,  curr_transformed.current_q);
 		current_controller_output_t curr_cntrl_output = current_controller_get_vd_vq_out(current_controller);
 		mc_mngr_instance.vd_setpoint = curr_cntrl_output.vd;
 		mc_mngr_instance.vq_setpoint = curr_cntrl_output.vq;
@@ -255,6 +247,7 @@ void motor_control_manager_init(motor_control_manager_cfg_t const *cfg)
 	mc_mngr_instance.mc_state = MC_STATE_IDLE;
 
 	mc_mngr_instance.sampling_time = (1.0f / mc_mngr_instance.cfg.pwm_freq);
+	mc_mngr_instance.time_base = ONE_SECOND_IN_NANOSECONDS / mc_timer_get_freq(mc_timer);
 	mc_mngr_instance.theta_ref_log = 0.0f;
 	mc_mngr_instance.theta_ref = 0.0f;
 	mc_mngr_instance.omega_ref = 0.0f;

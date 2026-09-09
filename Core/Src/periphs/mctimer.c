@@ -216,3 +216,10 @@ void mc_timer_deactivate_callback(mc_timer_t *const instance, mc_timer_callback_
 	__HAL_TIM_CLEAR_FLAG(&(instance->tim_periph), timerChannelFlag);
 }
 
+
+uint32_t mc_timer_get_freq(mc_timer_t *const instance)
+{
+	uint32_t ret_val = 0u;
+	ret_val = instance->timer_freq;
+	return ret_val;
+}

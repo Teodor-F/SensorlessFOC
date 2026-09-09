@@ -70,8 +70,8 @@ void measurement_layer_initializer(void)
 	float_t temp_elec_freq_hz = ((motor_max_rpm * motor_pole_pairs * 2u) / 120.0f);
 
 	pll_cfg_t pll_cfg = {
-		.kp = 85.0f,
-		.ki = 1200.0f,
+		.kp = 170.0f,
+		.ki = 12500.0f,
 		.ts =  1.0f / PWM_FREQ_HZ,
 		.omega_max = temp_elec_freq_hz * CONSTANT_TWO_PI,
 	};

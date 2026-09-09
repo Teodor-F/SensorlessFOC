@@ -10,10 +10,10 @@ void motor_control_manager_initializer(void)
 		.open_loop_ramp_time = 600u,
 		.open_loop_velocity_setpoint = 600u,
 		.open_loop_id = 0.0f,
-		.open_loop_iq = 750.0f,
+		.open_loop_iq = 850.0f,
 		.transition_time = 500u,
-		.transition_iq = 200.0f
+		.transition_iq = 250.0f
 	};
-
 	motor_control_manager_init(&mc_mngr_cfg);
+
 }

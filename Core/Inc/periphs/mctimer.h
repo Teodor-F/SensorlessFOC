@@ -43,4 +43,6 @@ void mc_timer_activate_callback(mc_timer_t *const instance, mc_timer_callback_id
 
 void mc_timer_deactivate_callback(mc_timer_t *const instance, mc_timer_callback_idx_t cb_idx);
 
+uint32_t mc_timer_get_freq(mc_timer_t *const instance);
+
 #endif /* MC_TIMER_H */

@@ -2,11 +2,13 @@
 #define CONTROL_LAYER_INITIALIZER_H_
 
 #include <velocity_controller.h>
+#include <current_transformation.h>
 #include <current_controller.h>
 #include <sv_modulation.h>
 #include <lpf_first_order.h>
 
 extern velocity_controller_t *velocity_controller;
+extern current_transformation_t *current_transformation;
 extern current_controller_t *current_controller;
 extern sv_modulation_t *sv_modulation;
 
