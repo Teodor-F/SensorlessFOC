@@ -1,4 +1,3 @@
-#include <config/motor_cfg.h>
 #include <mc_callback.h>
 
 
