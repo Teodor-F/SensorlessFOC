@@ -1,18 +1,17 @@
 #ifndef MOTOR_CONTROL_MANAGER_H_
 #define MOTOR_CONTROL_MANAGER_H_
 
-#include <stdbool.h>
+#include <mc_types.h>
 #include <foc_monitor.h>
-
-//========================================================================
-	// Communication layer
-extern volatile bool foc_telemetry_ready;
-extern volatile foc_monitor_frame_t monitor_frame;
-
+#include <mc_callback.h>
 
 typedef enum motor_control_manager_direction motor_control_manager_direction_t;
+typedef enum mc_task_1_subtask_type mc_task_1_subtask_type_t;
+typedef enum mc_task_2_subtask_type mc_task_2_subtask_type_t;
 typedef enum motor_control_manager_cycle_time motor_control_manager_cycle_time_t;
 typedef enum motor_control_manager_state motor_control_manager_state_t;
+
+typedef struct motor_control_subtask motor_control_subtask_t;
 typedef struct motor_control_manager_cfg motor_control_manager_cfg_t;
 typedef struct motor_control_manager motor_control_manager_t;
 
@@ -40,6 +39,33 @@ enum motor_control_manager_state {
 	MC_STATE_CLOSED_LOOP,
 	MC_STATE_ERROR
 };
+
+enum mc_task_1_subtask_type
+{
+    MC_TASK_1_COMMUNICATION = 0u,
+    MC_TASK_1_STATE_MACHINE,
+    MC_TASK_1_COUNT
+};
+
+enum mc_task_2_subtask_type
+{
+    MC_TASK_2_CURRENT_TRANSFORMATION = 0u,
+    MC_TASK_2_OBSERVER,
+    MC_TASK_2_VELOCITY_MEASURE,
+    MC_TASK_2_VELOCITY_CONTROL,
+    MC_TASK_2_CURRENT_CONTROL,
+    MC_TASK_2_MODULATION,
+    MC_TASK_2_COUNT
+};
+
+struct motor_control_subtask {
+	motor_control_manager_cycle_time_t cycle_time;
+	uint32_t cycle_cnt;
+	uint32_t cycle_cnt_max;
+	mc_callback_param_t subtask_param;
+	mc_callback_function_t subtask_func;
+};
+
 
 struct motor_control_manager_cfg {
 	float_t pwm_freq;
@@ -72,9 +98,6 @@ struct motor_control_manager {
 	float_t vq_setpoint;					//[mV]
 	float_t id_setpoint;					//[mA]
 	float_t iq_setpoint;					//[ma]
-
-
-
 //========================================================================
 	// Rotor Alignment
 	uint32_t aligment_tick_counter;
@@ -97,6 +120,9 @@ struct motor_control_manager {
 	uint32_t theta_offset_arr_size;
 	float_t theta_offset;
 	bool_t theta_offset_calculated;
+
+	motor_control_subtask_t task_1_subtasks[MC_TASK_1_COUNT];
+	motor_control_subtask_t task_2_subtasks[MC_TASK_2_COUNT];
 };
 
 void motor_control_manager_init(motor_control_manager_cfg_t const *cfg);

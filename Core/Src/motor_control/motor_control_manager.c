@@ -35,8 +35,6 @@ static inline bool_t ready_for_transition(void)
 	return ret_val;
 }
 
-
-
 static inline float_t constrain_angle(float_t angle)
 {
 	float_t ret_val = angle;
@@ -45,6 +43,29 @@ static inline float_t constrain_angle(float_t angle)
 		ret_val = 0.0f;
 	}
 	return ret_val;
+}
+
+static void motor_control_manager_register_subtask(motor_control_subtask_t *const subtask, motor_control_manager_cycle_time_t cycle_time , mc_callback_function_t subtask_function, mc_callback_param_t subtask_param)
+{
+	subtask->cycle_time = cycle_time;
+	subtask->cycle_cnt = 0u;
+	subtask->cycle_cnt_max = (uint32_t)cycle_time / mc_mngr_instance.time_base;
+	assert(subtask->cycle_cnt_max > 0u);
+	subtask->subtask_func = subtask_function;
+	subtask->subtask_param = subtask_param;
+}
+
+static void motor_control_manager_execute_subtask(motor_control_subtask_t *const subtask)
+{
+	subtask->cycle_cnt++;
+	if(subtask->cycle_cnt >= subtask->cycle_cnt_max)
+	{
+		if (subtask->subtask_func != NULL)
+		{
+			subtask->subtask_func(subtask->subtask_param);
+		}
+		subtask->cycle_cnt = 0;
+	}
 }
 
 static void motor_control_state_machine(void)
@@ -133,38 +154,30 @@ static void motor_control_state_machine(void)
 
 static void communication_subtask(mc_callback_param_t param)
 {
-	(void)param;
-	static uint32_t uart_comm_sw_delay = 0u;
-	if(uart_comm_sw_delay == UART_COMM_TRIG_CNT_VALUE)
-	{
-		uart_comm_sw_delay = 0u;
+	UNUSED(param);
+	current_measure_act_curr_t curr_abc = current_measure_get_currents(current_measure);
+	current_transformation_curr_t curr_clarke_park = current_transformation_get_currents(current_transformation);
+	lpf_first_order_process(lpf_id, curr_clarke_park.current_d);
+	lpf_first_order_process(lpf_iq,  curr_clarke_park.current_q);
+	sliding_mode_observer_emf_est_t emf_alpha_beta = sliding_mode_observer_get_emfs(smo);
+	float_t theta_smo = sliding_mode_observer_get_electrical_angle(smo);
 
-		current_measure_act_curr_t curr_abc = current_measure_get_currents(current_measure);
-		current_transformation_curr_t curr_clarke_park = current_transformation_get_currents(current_transformation);
-		lpf_first_order_process(lpf_id, curr_clarke_park.current_d);
-		lpf_first_order_process(lpf_iq,  curr_clarke_park.current_q);
-		sliding_mode_observer_emf_est_t emf_alpha_beta = sliding_mode_observer_get_emfs(smo);
-		float_t theta_smo = sliding_mode_observer_get_electrical_angle(smo);
+	static foc_monitor_frame_t monitor_frame = {0};
+	monitor_frame.header = FOC_FRAME_HEADER;
+	monitor_frame.ia_mA = curr_abc.curr_a;
+	monitor_frame.ib_mA = curr_abc.curr_b;
+	monitor_frame.ic_mA = curr_abc.curr_c;
+	monitor_frame.id_mA = lpf_first_order_get_filtered_value(lpf_id);
+	monitor_frame.iq_mA = lpf_first_order_get_filtered_value(lpf_iq);
+	monitor_frame.emf_alpha = emf_alpha_beta.emf_alfa;
+	monitor_frame.emf_beta = emf_alpha_beta.emf_beta;
+	monitor_frame.theta_real_rad = mc_mngr_instance.theta_open_loop;
+	monitor_frame.theta_observer_rad = theta_smo;
+	monitor_frame.theta_ref_log_rad = 0.0f;
+	monitor_frame.velocity_pll_rpm = velocity_measure_get_rpm(velocity_measure);
+	monitor_frame.velocity_setpoint = mc_mngr_instance.velocity_setpoint;
 
-		static foc_monitor_frame_t monitor_frame = {0};
-		monitor_frame.header = FOC_FRAME_HEADER;
-		monitor_frame.ia_mA = curr_abc.curr_a;
-		monitor_frame.ib_mA = curr_abc.curr_b;
-		monitor_frame.ic_mA = curr_abc.curr_c;
-		monitor_frame.id_mA = lpf_first_order_get_filtered_value(lpf_id);
-		monitor_frame.iq_mA = lpf_first_order_get_filtered_value(lpf_iq);
-		monitor_frame.emf_alpha = emf_alpha_beta.emf_alfa;
-		monitor_frame.emf_beta = emf_alpha_beta.emf_beta;
-		monitor_frame.theta_real_rad = mc_mngr_instance.theta_open_loop;
-		monitor_frame.theta_observer_rad = theta_smo;
-		monitor_frame.theta_ref_log_rad = 0.0f;
-		monitor_frame.velocity_pll_rpm = velocity_measure_get_rpm(velocity_measure);
-		monitor_frame.velocity_setpoint = mc_mngr_instance.velocity_setpoint;
-
-
-		uart_transmit(uart, (const uint8_t*)&monitor_frame, sizeof(foc_monitor_frame_t));
-	}
-	uart_comm_sw_delay++;
+	uart_transmit(uart, (const uint8_t*)&monitor_frame, sizeof(foc_monitor_frame_t));
 }
 
 
@@ -187,7 +200,6 @@ static void current_transformation_subtask(mc_callback_param_t param)
 static void observer_subtask(mc_callback_param_t param)
 {
 	UNUSED(param);
-
 	float_t v_alfa;
 	float_t v_beta;
 	sv_modulation_get_v_alfa_v_beta(sv_modulation, &v_alfa, &v_beta);
@@ -198,22 +210,18 @@ static void observer_subtask(mc_callback_param_t param)
 static void velocity_control_subtask(mc_callback_param_t param)
 {
 	UNUSED(param);
-	static uint32_t speed_div = 0;
-	if (++speed_div >= 4u)
-	{
-		float_t rpm = velocity_measure_get_rpm(velocity_measure);
-		if (mc_mngr_instance.mc_state == MC_STATE_CLOSED_LOOP)
-		{
-			velocity_controller_process(velocity_controller, rpm);
-			float_t id = 0.0f;
-			float_t iq = velocity_controller_get_current_out(velocity_controller);
-			current_controller_set_target_id(current_controller, id);
-			current_controller_set_target_iq(current_controller, iq);
 
-		}
-		speed_div = 0u;
+	float_t rpm = velocity_measure_get_rpm(velocity_measure);
+	if (mc_mngr_instance.mc_state == MC_STATE_CLOSED_LOOP)
+	{
+		velocity_controller_process(velocity_controller, rpm);
+		float_t id = 0.0f;
+		float_t iq = velocity_controller_get_current_out(velocity_controller);
+		current_controller_set_target_id(current_controller, id);
+		current_controller_set_target_iq(current_controller, iq);
 	}
 }
+
 
 static void state_machine_subtask(mc_callback_param_t param)
 {
@@ -235,7 +243,7 @@ static void current_controller_subtask(mc_callback_param_t param)
 	}
 }
 
-static void sv_modulation_subtask(mc_callback_param_t param)
+static void modulation_subtask(mc_callback_param_t param)
 {
 	UNUSED(param);
 	sv_modulation_process(sv_modulation, mc_mngr_instance.theta_ref);
@@ -244,19 +252,19 @@ static void sv_modulation_subtask(mc_callback_param_t param)
 static void motor_control_task_1(mc_callback_param_t mc_task_1_param)
 {
 	UNUSED(mc_task_1_param);
-	communication_subtask(NULL);
-	state_machine_subtask(NULL);
+	for (uint32_t sub_task_idx = 0; sub_task_idx < MC_TASK_1_COUNT; ++sub_task_idx)
+	{
+		motor_control_manager_execute_subtask(&(mc_mngr_instance.task_1_subtasks[sub_task_idx]));
+	}
 }
 
 static void motor_control_task_2(mc_callback_param_t mc_task_2_param)
 {
 	UNUSED(mc_task_2_param);
-	current_transformation_subtask(NULL);
-	observer_subtask(NULL);
-	velocity_measure_substask(NULL);
-	velocity_control_subtask(NULL);
-	current_controller_subtask(NULL);
-	sv_modulation_subtask(NULL);
+	for (uint32_t sub_task_idx = 0; sub_task_idx < MC_TASK_2_COUNT; ++sub_task_idx)
+	{
+		motor_control_manager_execute_subtask(&(mc_mngr_instance.task_2_subtasks[sub_task_idx]));
+	}
 }
 
 
@@ -295,6 +303,16 @@ void motor_control_manager_init(motor_control_manager_cfg_t const *cfg)
 	mc_mngr_instance.theta_offset_arr_idx = 0u;
 	mc_mngr_instance.theta_offset_arr_size = sizeof(mc_mngr_instance.theta_offset_arr) / sizeof(float_t);
 	mc_mngr_instance.theta_offset_calculated = FALSE;
+
+
+	motor_control_manager_register_subtask(&mc_mngr_instance.task_1_subtasks[MC_TASK_1_COMMUNICATION], MOTION_CONTROL_MANAGER_CYCLE_TIME_10000, communication_subtask, NULL);
+	motor_control_manager_register_subtask(&mc_mngr_instance.task_1_subtasks[MC_TASK_1_STATE_MACHINE], MOTION_CONTROL_MANAGER_CYCLE_TIME_62_50, state_machine_subtask, NULL);
+	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_CURRENT_TRANSFORMATION], MOTION_CONTROL_MANAGER_CYCLE_TIME_62_50, current_transformation_subtask, NULL);
+	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_OBSERVER], MOTION_CONTROL_MANAGER_CYCLE_TIME_62_50, observer_subtask, NULL);
+	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_VELOCITY_MEASURE], MOTION_CONTROL_MANAGER_CYCLE_TIME_62_50, velocity_measure_substask, NULL);
+	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_VELOCITY_CONTROL], MOTION_CONTROL_MANAGER_CYCLE_TIME_250, velocity_control_subtask, NULL);
+	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_CURRENT_CONTROL], MOTION_CONTROL_MANAGER_CYCLE_TIME_62_50, current_controller_subtask, NULL);
+	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_MODULATION], MOTION_CONTROL_MANAGER_CYCLE_TIME_62_50, modulation_subtask, NULL);
 
 	mc_timer_register_mc_callback(mc_timer, MCTIMER_CB_IDX_1, motor_control_task_1, NULL);
 	mc_timer_register_mc_callback(mc_timer, MCTIMER_CB_IDX_2, motor_control_task_2, NULL);
