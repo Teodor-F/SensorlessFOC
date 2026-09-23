@@ -10,15 +10,16 @@ struct __attribute__((packed)) foc_monitor_frame {
     int32_t  	ia_mA;
     int32_t  	ib_mA;
     int32_t  	ic_mA;
+    int32_t		i_alfa_ma;
+    int32_t		i_beta_ma;
     int32_t		id_mA;
     int32_t		iq_mA;
     float_t  	emf_alpha;
     float_t		emf_beta;
     float_t		theta_observer_rad;
-    float_t		theta_ref_log_rad;
-    float_t		theta_real_rad;
-    float_t  	velocity_pll_rpm;
-    float_t		velocity_setpoint;
+    float_t		theta_ref_rad;
+    float_t  	velocity_observer_rpm;
+    float_t		velocity_ref_rpm;
     uint16_t 	crc;
 };
 
