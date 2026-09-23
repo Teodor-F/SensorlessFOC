@@ -71,4 +71,6 @@ void current_controller_reset(current_controller_t* const instance)
 {
 	pi_controller_reset(&instance->id_pi_cntrl);
 	pi_controller_reset(&instance->iq_pi_cntrl);
+	instance->vd_out = 0.0f;
+	instance->vq_out = 0.0f;
 }

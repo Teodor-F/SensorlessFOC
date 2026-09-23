@@ -4,6 +4,9 @@
 velocity_controller_t *velocity_controller = NULL;
 static velocity_controller_t velocity_cntrl_instance = {0};
 
+revup_controller_t *revup_controller = NULL;
+static revup_controller_t revup_cntlr_instance = {0};
+
 current_transformation_t *current_transformation = NULL;
 static current_transformation_t curr_trans_instance = {0};
 
@@ -12,6 +15,12 @@ static current_controller_t curr_cntrl_instance = {0};
 
 sv_modulation_t *sv_modulation = NULL;
 static sv_modulation_t sv_modulation_istance = {0};
+
+lpf_first_order_t *lpf_i_alfa = NULL;
+static lpf_first_order_t lpf_i_alfa_instance = {0};
+
+lpf_first_order_t *lpf_i_beta = NULL;
+static lpf_first_order_t lpf_i_beta_instance = {0};
 
 lpf_first_order_t *lpf_id = NULL;
 static lpf_first_order_t lpf_id_instance = {0};
@@ -35,6 +44,23 @@ void control_layer_initializer(void)
 	velocity_controller_init(&velocity_cntrl_instance, &velocity_cntrl_cfg);
 	velocity_controller = &velocity_cntrl_instance;
 
+//========================================================================
+	// I/f Revup controller initialization
+	revup_controller_config_t revup_cntrl_cfg = {
+		.pwm_freq = PWM_FREQ_HZ,
+		.alignment_time = 100u,
+		.aligment_id = 0.0f,
+		.aligment_iq = 1000.0f,
+		.open_loop_ramp_time = 500u,
+		.open_loop_velocity_setpoint = 500u,
+		.open_loop_id = 0.0f,
+		.open_loop_iq = 750.0f,
+		.stabilization_time = 500u,
+		.stabilization_id = 0.0f,
+		.stabilization_iq = 225.0f
+	};
+	revup_controller_init(&revup_cntlr_instance, &revup_cntrl_cfg);
+	revup_controller = &revup_cntlr_instance;
 
 //========================================================================
 	// Current transformation initialization
@@ -43,14 +69,24 @@ void control_layer_initializer(void)
 
 //========================================================================
 	// Current controller initialization
-
-	lpf_first_order_cfg_t lpf_id_iq_cfg = {
-		.cutoff_freq_hz = 30,
+	lpf_first_order_cfg_t lp_i_alfa_beta = {
+		.cutoff_freq_hz = 1000u,
 		.ts = 1.0f / PWM_FREQ_HZ
 	};
-	lpf_first_order_init(&lpf_id_instance, &lpf_id_iq_cfg);
+
+	lpf_first_order_cfg_t lpf_i_dq_cfg = {
+		.cutoff_freq_hz = 50u,
+		.ts = 1.0f / PWM_FREQ_HZ
+	};
+
+	lpf_first_order_init(&lpf_i_alfa_instance, &lp_i_alfa_beta);
+	lpf_first_order_init(&lpf_i_beta_instance, &lp_i_alfa_beta);
+	lpf_first_order_init(&lpf_id_instance, &lpf_i_dq_cfg);
+	lpf_first_order_init(&lpf_iq_istance, &lpf_i_dq_cfg);
+
+	lpf_i_alfa = &lpf_i_alfa_instance;
+	lpf_i_beta = &lpf_i_beta_instance;
 	lpf_id = &lpf_id_instance;
-	lpf_first_order_init(&lpf_iq_istance, &lpf_id_iq_cfg);
 	lpf_iq = &lpf_iq_istance;
 
 

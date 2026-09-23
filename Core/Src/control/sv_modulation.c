@@ -112,3 +112,12 @@ void sv_modulation_get_v_alfa_v_beta(sv_modulation_t *const instance, float *v_a
 	*v_alfa_ptr = instance->v_alfa;
 	*v_beta_ptr = instance->v_beta;
 }
+
+void sv_modulation_reset(sv_modulation_t *const instance)
+{
+	instance->v_d = 0.0f;
+	instance->v_q = 0.0f;
+	pwm_set_duty_cycles(pwm, PWM_DC_50, PWM_DC_50, PWM_DC_50);
+
+}
+

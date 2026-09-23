@@ -8,7 +8,7 @@ void velocity_measure_init(velocity_measure_t *const instance, velocity_measure_
 	instance->kv_value = cfg->kv_value;
 	instance->pole_pairs = cfg->pole_pairs;
 	instance->lpf_fo_instance = cfg->lpf_fo_instance;
-	instance->rpm = 0;
+	instance->rpm = 0.0f;
 }
 
 void velocity_measure_process(velocity_measure_t *const instance, float_t omega_electrical_rad_s)
@@ -25,5 +25,10 @@ float_t velocity_measure_get_rpm(velocity_measure_t *const instance)
 {
 	float_t ret_val = instance->rpm;
 	return ret_val;
+}
+
+void velocity_measure_reset(velocity_measure_t *const instance)
+{
+	instance->rpm = 0.0f;
 }
 

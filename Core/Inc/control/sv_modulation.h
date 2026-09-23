@@ -37,4 +37,6 @@ void sv_modulation_set_target_vd_vq(sv_modulation_t *const instance, const float
 
 void sv_modulation_get_v_alfa_v_beta(sv_modulation_t *const instance, float *v_alfa_ptr, float *v_beta_ptr);
 
+void sv_modulation_reset(sv_modulation_t *const instance);
+
 #endif /* SVM_H_ */

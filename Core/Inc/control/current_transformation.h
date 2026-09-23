@@ -25,4 +25,6 @@ void current_transformation_process(current_transformation_t *const instance, fl
 
 current_transformation_curr_t current_transformation_get_currents(current_transformation_t *const instance);
 
+void current_transformation_reset(current_transformation_t *const instance);
+
 #endif /* CURRENT_TRANSFORMATION_H_ */

@@ -25,3 +25,11 @@ current_transformation_curr_t current_transformation_get_currents(current_transf
 	ret_val.current_q = instance->current_q;
 	return ret_val;
 }
+
+void current_transformation_reset(current_transformation_t *const instance)
+{
+	instance->current_alfa = 0.0f;
+	instance->current_beta = 0.0f;
+	instance->current_d = 0.0f;
+	instance->current_q = 0.0f;
+}
