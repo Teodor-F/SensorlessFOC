@@ -19,11 +19,13 @@ void revup_controller_init(revup_controller_t *const instance, const revup_contr
 	instance->revup_cntrl_state = REVUP_CONTROLLER_IDLE;
 	instance->revup_finished = FALSE;
 
-	instance->ts = (1.0f / instance->revup_cfg.pwm_freq);
 
-	instance->aligment_ticks = (uint32_t)(((float_t)instance->revup_cfg.alignment_time * instance->revup_cfg.pwm_freq) / 1000.0f);
+	instance->sampling_time = ((float_t)cfg->cycle_time / CYCLE_TIME_DIVIDER);
+
+
+	instance->aligment_ticks = (uint32_t)(((float_t)instance->revup_cfg.alignment_time * (1.0f/instance->sampling_time)) / 1000.0f);
 	instance->aligment_tick_counter = 0u;
-	instance->open_loop_ramp_time_ticks = (uint32_t)(((float_t)instance->revup_cfg.open_loop_ramp_time *instance->revup_cfg.pwm_freq) / 1000.0f);
+	instance->open_loop_ramp_time_ticks = (uint32_t)(((float_t)instance->revup_cfg.open_loop_ramp_time * (1.0f/instance->sampling_time)) / 1000.0f);
 	instance->open_loop_ramp_time_tick_counter = 0u;
 
 	uint32_t pole_pairs = motor_cfg_get_motor_pole_pairs();
@@ -31,7 +33,7 @@ void revup_controller_init(revup_controller_t *const instance, const revup_contr
 	instance->open_loop_omega_max = temp_elec_freq_hz * CONSTANT_TWO_PI;
 	instance->open_loop_omega_dt = (instance->open_loop_omega_max / (instance->revup_cfg.open_loop_ramp_time / 1000.0f));
 
-	instance->stabilization_time_ticks = (uint32_t)(((float_t)instance->revup_cfg.stabilization_time * instance->revup_cfg.pwm_freq) / 1000.0f);
+	instance->stabilization_time_ticks = (uint32_t)(((float_t)instance->revup_cfg.stabilization_time * (1.0f/instance->sampling_time)) / 1000.0f);
 	instance->stabilization_time_tick_counter = 0u;
 
 	instance->theta_out = 0.0f;
@@ -63,13 +65,13 @@ void revup_controller_process(revup_controller_t *const instance)
 		// Accelerate the motor in open-loop mode
 		case REVUP_CONTROLLER_OPEN_LOOP_ACCELERATION:
 		{
-			instance->open_loop_omega += (instance->open_loop_omega_dt * instance->ts);
+			instance->open_loop_omega += (instance->open_loop_omega_dt * instance->sampling_time);
 			if(instance->open_loop_omega >= instance->open_loop_omega_max)
 			{
 				instance->open_loop_omega = instance->open_loop_omega_max;
 				instance->revup_cntrl_state = REVUP_CONTROLLER_STABILIZATION;
 			}
-			instance->theta_out += (instance->open_loop_omega * instance->ts);
+			instance->theta_out += (instance->open_loop_omega * instance->sampling_time);
 			instance->theta_out = constrain_angle(instance->theta_out);
 			instance->id_out = instance->revup_cfg.aligment_id;
 			instance->iq_out = instance->revup_cfg.aligment_iq;
@@ -80,7 +82,7 @@ void revup_controller_process(revup_controller_t *const instance)
 		case REVUP_CONTROLLER_STABILIZATION:
 		{
 
-			instance->theta_out += (instance->open_loop_omega * instance->ts);
+			instance->theta_out += (instance->open_loop_omega * instance->sampling_time);
 			instance->theta_out = constrain_angle(instance->theta_out);
 			instance->id_out = instance->revup_cfg.stabilization_id;
 			instance->iq_out = instance->revup_cfg.stabilization_iq;

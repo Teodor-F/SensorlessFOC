@@ -8,7 +8,7 @@ void current_controller_init(current_controller_t* const instance, const current
 		.kp = cfg->kp_id,
 		.ki = cfg->ki_id,
 		.out_limit = cfg->vd_out_limit,
-		.ts = cfg->ts
+		.cycle_time = cfg->cycle_time,
 	};
 	pi_controller_init(&instance->id_pi_cntrl, &pi_id_config);
 
@@ -16,11 +16,11 @@ void current_controller_init(current_controller_t* const instance, const current
 		.kp = cfg->kp_iq,
 		.ki = cfg->ki_iq,
 		.out_limit = cfg->vq_out_limit,
-		.ts = cfg->ts
+		.cycle_time = cfg->cycle_time
 	};
 	pi_controller_init(&instance->iq_pi_cntrl, &pi_iq_config);
 
-	instance->ts = cfg->ts;
+	instance->sampling_time = ((float_t)cfg->cycle_time / CYCLE_TIME_DIVIDER);
 	instance->id_ref = 0.0f;
 	instance->iq_ref = 0.0f;
 	instance->vd_out = 0.0f;

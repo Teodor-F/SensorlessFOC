@@ -10,14 +10,14 @@ struct velocity_controller_cfg
 {
 	float_t kp;
 	float_t ki;
-	float_t ts;					// [s]
 	float_t iq_max_out;			// [mA]
 	float_t velocity_ref_limit;	// [rpm]
+	motor_control_cycle_time_t cycle_time;
 };
 
 struct velocity_controller {
 	pi_controller_t velocity_pi_cntrl;
-	float_t ts;							// [s]
+	float_t sampling_time;				// [s]
 	float_t velocity_ref;				// [rpm]
 	float_t iq_out;						// [mA]
 };

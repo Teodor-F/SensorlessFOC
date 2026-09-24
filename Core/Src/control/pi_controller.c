@@ -5,8 +5,8 @@ void pi_controller_init(pi_controller_t* const instance, const pi_controller_cfg
 {
 	instance->kp = cfg->kp;
 	instance->ki = cfg->ki;
-	instance->ts = cfg->ts;
-	instance->ki_ts_by_two = ONE_BY_TWO * instance->ki * instance->ts;
+	instance->sampling_time = ((float_t)cfg->cycle_time / CYCLE_TIME_DIVIDER);
+	instance->ki_ts_by_two = ONE_BY_TWO * instance->ki * instance->sampling_time;
 	instance->output_max = cfg->out_limit;
 	instance->output_min = -cfg->out_limit;
 	instance->integral = 0.0f;

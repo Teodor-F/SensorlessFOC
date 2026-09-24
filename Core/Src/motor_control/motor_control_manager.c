@@ -7,8 +7,6 @@
 #include <motor_cfg.h>
 #include <foc_monitor.h>
 
-#define ONE_SECOND_IN_NANOSECONDS ((uint32_t)(1000000000u))
-
 static motor_control_manager_t mc_mngr_instance = {0};
 
 static inline void motor_control_manager_activate_request(motor_control_request_t mc_request)
@@ -276,17 +274,17 @@ static void motor_control_task_2(mc_callback_param_t mc_task_2_param)
 void motor_control_manager_init()
 {
 	mc_mngr_instance.mc_state = MC_STATE_IDLE;
-	mc_mngr_instance.time_base = ONE_SECOND_IN_NANOSECONDS / mc_timer_get_freq(mc_timer);
+	mc_mngr_instance.time_base = CYCLE_TIME_DIVIDER / mc_timer_get_freq(mc_timer);
 
-	motor_control_manager_register_subtask(&mc_mngr_instance.task_1_subtasks[MC_TASK_1_COMMUNICATION], MOTOR_CONTROL_CYCLE_TIME_10000, communication_subtask, NULL);
-	motor_control_manager_register_subtask(&mc_mngr_instance.task_1_subtasks[MC_TASK_1_STATE_MACHINE], MOTOR_CONTROL_CYCLE_TIME_62_50, state_machine_subtask, NULL);
-	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_CURRENT_TRANSFORMATION], MOTOR_CONTROL_CYCLE_TIME_62_50, current_transformation_subtask, NULL);
-	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_REVUP], MOTOR_CONTROL_CYCLE_TIME_62_50, revup_controller_subtask, NULL);
-	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_OBSERVER], MOTOR_CONTROL_CYCLE_TIME_62_50, observer_subtask, NULL);
-	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_VELOCITY_MEASURE], MOTOR_CONTROL_CYCLE_TIME_62_50, velocity_measure_substask, NULL);
-	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_VELOCITY_CONTROL], MOTOR_CONTROL_CYCLE_TIME_250, velocity_control_subtask, NULL);
-	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_CURRENT_CONTROL], MOTOR_CONTROL_CYCLE_TIME_62_50, current_controller_subtask, NULL);
-	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_MODULATION], MOTOR_CONTROL_CYCLE_TIME_62_50, modulation_subtask, NULL);
+	motor_control_manager_register_subtask(&mc_mngr_instance.task_1_subtasks[MC_TASK_1_COMMUNICATION], COMMUNICATION_CYCLE_TIME, communication_subtask, NULL);
+	motor_control_manager_register_subtask(&mc_mngr_instance.task_1_subtasks[MC_TASK_1_STATE_MACHINE], STATE_MACHINE_CYCLE_TIME, state_machine_subtask, NULL);
+	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_CURRENT_TRANSFORMATION], CURRENT_TRANS_CYCYLE_TIME, current_transformation_subtask, NULL);
+	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_REVUP], REVUP_CONTROLLER_CYCLE_TIME, revup_controller_subtask, NULL);
+	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_OBSERVER], OBSERVER_CYCLE_TIME, observer_subtask, NULL);
+	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_VELOCITY_MEASURE], VELOCITY_MEASURE_CYCYLE_TIME, velocity_measure_substask, NULL);
+	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_VELOCITY_CONTROL], VELOCITY_CONTROL_CYCLE_TIME, velocity_control_subtask, NULL);
+	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_CURRENT_CONTROL], CURRENT_CONTROL_CYCLE_TIME, current_controller_subtask, NULL);
+	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_MODULATION], MODULATION_CYCLE_TIME, modulation_subtask, NULL);
 
 	for (uint32_t idx = 0; idx < MC_REQUEST_COUNT; ++idx)
 	{

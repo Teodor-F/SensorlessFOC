@@ -13,12 +13,12 @@ typedef struct sliding_mode_observer_emf_est sliding_mode_observer_emf_est_t;
 struct sliding_mode_observer_cfg {
 	float rs;
 	float ls;
-	float ts;
 	float k_sliding_gain;
 	float g_emf_gain;
 	float boundary;
 	float emf_threshold;
 	float emf_cntr_threshold;
+	motor_control_cycle_time_t cycle_time;
 };
 
 struct sliding_mode_observer {
@@ -29,7 +29,7 @@ struct sliding_mode_observer {
 	float g_emf_gain;
 	float boundary;
 	float inv_boundary;
-	float ts;
+	float sampling_time;
 	float inv_ts;
 
 	float i_alpha_est;

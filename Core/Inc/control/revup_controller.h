@@ -19,7 +19,6 @@ struct revup_controller_current_output {
 };
 
 struct revup_controller_config {
-	float_t pwm_freq;
 	uint32_t alignment_time;
 	float_t aligment_id;
 	float_t aligment_iq;
@@ -30,13 +29,14 @@ struct revup_controller_config {
 	float_t stabilization_id;
 	float_t stabilization_iq;
 	uint32_t stabilization_time;
+	motor_control_cycle_time_t cycle_time;
 };
 
 struct revup_controller {
 	revup_controller_config_t revup_cfg;
 	revup_controller_state_t revup_cntrl_state;
+	float_t sampling_time;
 	bool_t revup_finished;
-	float_t ts;
 	uint32_t aligment_tick_counter;
 	uint32_t aligment_ticks;
 	uint32_t open_loop_ramp_time_tick_counter;

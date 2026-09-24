@@ -7,14 +7,15 @@ typedef struct pi_controller pi_controller_t;
 struct pi_controller_cfg {
 	float kp;
 	float ki;
-	float ts;
 	float out_limit;
+	motor_control_cycle_time_t cycle_time;
+
 };
 
 struct pi_controller {
     float kp;
     float ki;
-    float ts;
+    float sampling_time;
     float ki_ts_by_two;
     float integral;
     float prev_error;

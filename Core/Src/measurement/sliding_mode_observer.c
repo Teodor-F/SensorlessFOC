@@ -30,15 +30,16 @@ void sliding_mode_observer_init(sliding_mode_observer_t* const instance, const s
 	float Rs = cfg->rs * 1e-3f;   // mΩ → Ω
 	float Ls = cfg->ls * 1e-3f;   // mH → H
 
-	instance->a1 = expf(-(Rs /Ls) * cfg->ts);
+	instance->sampling_time = ((float_t)cfg->cycle_time / CYCLE_TIME_DIVIDER);
+	instance->inv_ts = 1.0f / instance->sampling_time;
+
+	instance->a1 = expf(-(Rs /Ls) * instance->sampling_time);
 	instance->b1 = (1.0f - instance->a1) / Rs;
 	instance->b1_inv = 1.0f / instance->b1;
 	instance->k_sliding_gain = cfg->k_sliding_gain;
 	instance->g_emf_gain = cfg->g_emf_gain;
 	instance->boundary = cfg->boundary;
 	instance->inv_boundary = (1.0f / instance->boundary);
-	instance->ts = cfg->ts;
-	instance->inv_ts = 1.0f / instance->ts;
 
 	instance->i_alpha_est = 0.0f;
 	instance->i_beta_est = 0.0f;
@@ -57,7 +58,7 @@ void sliding_mode_observer_init(sliding_mode_observer_t* const instance, const s
 
 	memset(instance->delta_theta_buf, 0.0f, sizeof(instance->delta_theta_buf));
 	instance->delta_theta_sum = 0.0f;
-	instance->inv_n_ts = 1.0f / (SMO_MOVING_AVG_FILTER_LEN * instance->ts);
+	instance->inv_n_ts = 1.0f / (SMO_MOVING_AVG_FILTER_LEN * instance->sampling_time);
 	instance->idx = 0;
 
 }

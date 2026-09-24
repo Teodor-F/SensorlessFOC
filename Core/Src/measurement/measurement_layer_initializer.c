@@ -1,12 +1,9 @@
 #include <measurement_layer_initializer.h>
-
 #include <motor_cfg.h>
-#include <lpf_first_order.h>
 
 velocity_measure_t *velocity_measure = NULL;
 current_measure_t *current_measure = NULL;
 sliding_mode_observer_t *smo = NULL;
-pll_t *pll = NULL;
 
 //========================================================================
 	// Measurement layer instances
@@ -14,7 +11,6 @@ static lpf_first_order_t velocity_measure_lpf = {0};
 static velocity_measure_t vel_meas_instance = {0};
 static current_measure_t curr_meas_instance = {0};
 static sliding_mode_observer_t smo_instance = {0};
-static pll_t pll_instance = {0};
 
 void measurement_layer_initializer(void)
 {
@@ -28,7 +24,7 @@ void measurement_layer_initializer(void)
 	// Velocity measurement initialization
 	lpf_first_order_cfg_t velocity_measure_lpf_cfg = {
 		.cutoff_freq_hz = 10.0f,
-		.ts = (1.0f / PWM_FREQ_HZ),
+		.cycle_time = VELOCITY_MEASURE_CYCYLE_TIME
 	};
 	lpf_first_order_init(&velocity_measure_lpf, &velocity_measure_lpf_cfg);
 
@@ -56,26 +52,14 @@ void measurement_layer_initializer(void)
 	sliding_mode_observer_cfg_t smo_cfg = {
 		.rs = motor_resistance,
 		.ls = motor_inductance,
-		.ts = 1.0f / PWM_FREQ_HZ,
 		.boundary = 175.0f,
 		.k_sliding_gain = 60.0f,
 		.g_emf_gain = 0.065f,
 		.emf_cntr_threshold = 500u,
-		.emf_threshold = 500.0f
+		.emf_threshold = 500.0f,
+		.cycle_time = OBSERVER_CYCLE_TIME
 	};
 	sliding_mode_observer_init(&smo_instance, &smo_cfg);
-
-//========================================================================
-	// Phase-locked-loop initialization
-	float_t temp_elec_freq_hz = ((motor_max_rpm * motor_pole_pairs * 2u) / 120.0f);
-
-	pll_cfg_t pll_cfg = {
-		.kp = 170.0f,
-		.ki = 12500.0f,
-		.ts =  1.0f / PWM_FREQ_HZ,
-		.omega_max = temp_elec_freq_hz * CONSTANT_TWO_PI,
-	};
-	pll_init(&pll_instance, &pll_cfg);
 
 
 //========================================================================
@@ -83,6 +67,5 @@ void measurement_layer_initializer(void)
 	velocity_measure = &vel_meas_instance;
 	current_measure = &curr_meas_instance;
 	smo = &smo_instance;
-	pll = &pll_instance;
 }
 

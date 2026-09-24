@@ -39,7 +39,7 @@ void control_layer_initializer(void)
 		.ki = 3.75f,
 		.velocity_ref_limit = motor_max_rpm,
 		.iq_max_out = 1000.0f,
-		.ts = 0.00025f
+		.cycle_time = MOTOR_CONTROL_CYCLE_TIME_250
 	};
 	velocity_controller_init(&velocity_cntrl_instance, &velocity_cntrl_cfg);
 	velocity_controller = &velocity_cntrl_instance;
@@ -47,7 +47,6 @@ void control_layer_initializer(void)
 //========================================================================
 	// I/f Revup controller initialization
 	revup_controller_config_t revup_cntrl_cfg = {
-		.pwm_freq = PWM_FREQ_HZ,
 		.alignment_time = 100u,
 		.aligment_id = 0.0f,
 		.aligment_iq = 1000.0f,
@@ -57,7 +56,8 @@ void control_layer_initializer(void)
 		.open_loop_iq = 750.0f,
 		.stabilization_time = 500u,
 		.stabilization_id = 0.0f,
-		.stabilization_iq = 225.0f
+		.stabilization_iq = 225.0f,
+		.cycle_time = REVUP_CONTROLLER_CYCLE_TIME
 	};
 	revup_controller_init(&revup_cntlr_instance, &revup_cntrl_cfg);
 	revup_controller = &revup_cntlr_instance;
@@ -71,12 +71,12 @@ void control_layer_initializer(void)
 	// Current controller initialization
 	lpf_first_order_cfg_t lp_i_alfa_beta = {
 		.cutoff_freq_hz = 1000u,
-		.ts = 1.0f / PWM_FREQ_HZ
+		.cycle_time = CURRENT_CONTROL_CYCLE_TIME
 	};
 
 	lpf_first_order_cfg_t lpf_i_dq_cfg = {
 		.cutoff_freq_hz = 50u,
-		.ts = 1.0f / PWM_FREQ_HZ
+		.cycle_time = CURRENT_CONTROL_CYCLE_TIME
 	};
 
 	lpf_first_order_init(&lpf_i_alfa_instance, &lp_i_alfa_beta);
@@ -101,7 +101,7 @@ void control_layer_initializer(void)
 		.ki_iq = 85.0f,
 		.vd_out_limit = motor_nominal_voltage * ONE_BY_SQRT_THREE,
 		.vq_out_limit =  motor_nominal_voltage * ONE_BY_SQRT_THREE,
-		.ts = 1.0f / PWM_FREQ_HZ,
+		.cycle_time = CURRENT_CONTROL_CYCLE_TIME
 	};
 	current_controller_init(&curr_cntrl_instance, &curr_cntrl_cfg);
 	current_controller = &curr_cntrl_instance;

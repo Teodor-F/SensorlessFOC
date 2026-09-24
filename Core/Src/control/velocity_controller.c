@@ -7,12 +7,11 @@ void velocity_controller_init(velocity_controller_t *const instance, const veloc
 		.kp = cfg->kp,
 		.ki = cfg->ki,
 		.out_limit = cfg->iq_max_out,
-		.ts = cfg->ts
+		.cycle_time = cfg->cycle_time
 	};
 	pi_controller_init(&instance->velocity_pi_cntrl, &pi_velocity_cfg);
-
+	instance->sampling_time = ((float_t)cfg->cycle_time / CYCLE_TIME_DIVIDER);
 	instance->velocity_ref = 0.0f;
-	instance->ts = cfg->ts;
 	instance->iq_out = 0.0f;
 }
 

@@ -2,7 +2,6 @@
 #define MOTOR_CONTROL_MANAGER_H_
 
 #include <mc_types.h>
-#include <foc_monitor.h>
 #include <mc_callback.h>
 
 typedef enum motor_control_task_1_subtask_type motor_control_task_1_subtask_type_t;
@@ -16,15 +15,18 @@ typedef struct motor_control_subtask motor_control_subtask_t;
 typedef struct motor_control_manager_cfg motor_control_manager_cfg_t;
 typedef struct motor_control_manager motor_control_manager_t;
 
+
+#define CYCLE_TIME_DIVIDER ((uint32_t)(1000000000u))  // 1 second in nanoseconds
+
 enum motor_control_cycle_time {
-    MOTOR_CONTROL_CYCLE_TIME_62_50 	= 62500u,       // 62.50 us
-    MOTOR_CONTROL_CYCLE_TIME_125  	= 125000u,      // 125 us
-	MOTOR_CONTROL_CYCLE_TIME_250   	= 250000u,      // 250 us
-	MOTOR_CONTROL_CYCLE_TIME_500   	= 500000u,      // 500 us
-	MOTOR_CONTROL_CYCLE_TIME_1000  	= 1000000u,     // 1000 us
-	MOTOR_CONTROL_CYCLE_TIME_2000  	= 2000000u,		// 2000 us
-	MOTOR_CONTROLCYCLE_TIME_5000	= 5000000u,		// 5000 us
-	MOTOR_CONTROL_CYCLE_TIME_10000	= 10000000u		// 10000 us
+    MOTOR_CONTROL_CYCLE_TIME_62_50 	= 62500u,       // [us]
+    MOTOR_CONTROL_CYCLE_TIME_125  	= 125000u,      // [us]
+	MOTOR_CONTROL_CYCLE_TIME_250   	= 250000u,      // [us]
+	MOTOR_CONTROL_CYCLE_TIME_500   	= 500000u,      // [us]
+	MOTOR_CONTROL_CYCLE_TIME_1000  	= 1000000u,     // [us]
+	MOTOR_CONTROL_CYCLE_TIME_2000  	= 2000000u,		// [us]
+	MOTOR_CONTROLCYCLE_TIME_5000	= 5000000u,		// [us]
+	MOTOR_CONTROL_CYCLE_TIME_10000	= 10000000u		// [us]
 };
 
 enum motor_control_state {

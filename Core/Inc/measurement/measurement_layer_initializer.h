@@ -5,6 +5,7 @@
 #include <sliding_mode_observer.h>
 #include <pll.h>
 #include <velocity_measure.h>
+#include <lpf_first_order.h>
 
 extern velocity_measure_t *velocity_measure;
 extern current_measure_t *current_measure;

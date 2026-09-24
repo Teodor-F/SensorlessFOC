@@ -5,12 +5,13 @@ typedef struct lpf_first_order_cfg lpf_first_order_cfg_t;
 typedef struct lpf_first_order lpf_first_order_t;
 
 struct lpf_first_order_cfg {
-	float_t ts;
+	motor_control_cycle_time_t cycle_time;
 	float_t cutoff_freq_hz;
 };
 
 struct lpf_first_order {
 	lpf_first_order_cfg_t cfg;
+	float_t sampling_time;
 	float_t tau;
 	float_t lpf_constant;
 	float_t filtered_value;

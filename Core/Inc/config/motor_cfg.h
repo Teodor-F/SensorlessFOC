@@ -1,6 +1,8 @@
 #ifndef MOTOR_CFG_H
 #define MOTOR_CFG_H
 
+#include <mc_types.h>
+
 typedef struct motor_cfg motor_cfg_t;
 
 struct motor_cfg {
