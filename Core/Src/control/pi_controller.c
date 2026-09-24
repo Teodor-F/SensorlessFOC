@@ -14,13 +14,13 @@ void pi_controller_init(pi_controller_t* const instance, const pi_controller_cfg
 	instance->output = 0.0f;
 }
 
-float pi_controller_process(pi_controller_t* const instance, float error)
+float_t pi_controller_process(pi_controller_t* const instance, float_t error)
 {
-	float ret_val = 0.0f;
+	float_t ret_val = 0.0f;
 
-	float p_term = instance->kp * error;
-	float i_term_temp = instance->integral + instance->ki_ts_by_two * (error + instance->prev_error);
-	float output = instance->kp * error + i_term_temp;
+	float_t p_term = instance->kp * error;
+	float_t i_term_temp = instance->integral + instance->ki_ts_by_two * (error + instance->prev_error);
+	float_t output = instance->kp * error + i_term_temp;
 
 	if(output < instance->output_max &&	output > instance->output_min)
 	{
@@ -42,7 +42,7 @@ float pi_controller_process(pi_controller_t* const instance, float error)
 	return ret_val;
 }
 
-void pi_controller_set_integral(pi_controller_t* const instance, float integral)
+void pi_controller_set_integral(pi_controller_t* const instance, float_t integral)
 {
 	instance->integral = integral;
 }

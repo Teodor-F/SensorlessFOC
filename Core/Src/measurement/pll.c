@@ -16,17 +16,17 @@ void pll_init(pll_t* const instance, const pll_cfg_t* cfg)
 	instance->theta_est = 0.0f;
 }
 
-void pll_process(pll_t* const instance, float emf_alpha_est, float emf_beta_est)
+void pll_process(pll_t* const instance, float_t emf_alpha_est, float_t emf_beta_est)
 {
     assert(instance != NULL);
 
-	float sin_value = sinf(instance->theta_est);
-	float cos_value = cosf(instance->theta_est);
+	float_t sin_value = sinf(instance->theta_est);
+	float_t cos_value = cosf(instance->theta_est);
 
     // normalize EMF to remove amplitude dependency
-    float mag = fabsf(emf_alpha_est) + fabsf(emf_beta_est) + 1e-6f;
+    float_t mag = fabsf(emf_alpha_est) + fabsf(emf_beta_est) + 1e-6f;
 
-    float error = (emf_alpha_est * sin_value - emf_beta_est * cos_value) / mag;
+    float_t error = (emf_alpha_est * sin_value - emf_beta_est * cos_value) / mag;
 
     // PI controller
     instance->omega_est += error * instance->ki;
@@ -41,7 +41,7 @@ void pll_process(pll_t* const instance, float emf_alpha_est, float emf_beta_est)
         instance->omega_est = -instance->omega_max;
     }
 
-    float omega_out = instance->omega_est + instance->kp * error;
+    float_t omega_out = instance->omega_est + instance->kp * error;
 
     // optional clamp (extra safety)
     if (omega_out > instance->omega_max)
@@ -67,15 +67,15 @@ void pll_process(pll_t* const instance, float emf_alpha_est, float emf_beta_est)
     }
 }
 
-void pll_process_new(pll_t* const instance, float emf_alpha_est, float emf_beta_est)
+void pll_process_new(pll_t* const instance, float_t emf_alpha_est, float_t emf_beta_est)
 {
     assert(instance != NULL);
 
-	float sin_value = sinf(instance->theta_est);
-	float cos_value = cosf(instance->theta_est);
+	float_t sin_value = sinf(instance->theta_est);
+	float_t cos_value = cosf(instance->theta_est);
 
-	float mag = sqrtf(emf_alpha_est * emf_alpha_est + emf_beta_est * emf_beta_est) + 1e-6f;
-	float error = (-emf_alpha_est * sin_value +  emf_beta_est * cos_value) / mag;
+	float_t mag = sqrtf(emf_alpha_est * emf_alpha_est + emf_beta_est * emf_beta_est) + 1e-6f;
+	float_t error = (-emf_alpha_est * sin_value +  emf_beta_est * cos_value) / mag;
 
 	// PI-block
 	instance->omega_integral = instance->omega_integral + instance->ki_ts * error;
@@ -88,7 +88,7 @@ void pll_process_new(pll_t* const instance, float emf_alpha_est, float emf_beta_
 		instance->omega_integral = -instance->omega_max;
 	}
 
-	float omega = instance->kp * error + instance->omega_integral;
+	float_t omega = instance->kp * error + instance->omega_integral;
 	if(omega > instance->omega_max)
 	{
 		omega = instance->omega_max;
@@ -123,21 +123,21 @@ void pll_reset(pll_t* const instance)
 }
 
 
-float pll_get_est_theta(const pll_t* const instance)
+float_t pll_get_est_theta(const pll_t* const instance)
 {
 	assert(instance != NULL);
 
-	float temp = instance->theta_est;
+	float_t temp = instance->theta_est;
 	temp -= CONSTANT_PI * ONE_BY_TWO;
 	CONSTRAIN_ANGLE_RAD_ZERO_TWO_PI(temp);
-	float ret_val = temp;
+	float_t ret_val = temp;
 	return ret_val;
 }
 
-float pll_get_est_omega(const pll_t* const instance)
+float_t pll_get_est_omega(const pll_t* const instance)
 {
 	assert(instance != NULL);
-	float ret_val = instance->omega_est;
+	float_t ret_val = instance->omega_est;
 	return ret_val;
 }
 

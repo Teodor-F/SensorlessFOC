@@ -5,30 +5,30 @@ typedef struct pi_controller_cfg pi_controller_cfg_t;
 typedef struct pi_controller pi_controller_t;
 
 struct pi_controller_cfg {
-	float kp;
-	float ki;
-	float out_limit;
+	float_t kp;
+	float_t ki;
+	float_t out_limit;
 	motor_control_cycle_time_t cycle_time;
 
 };
 
 struct pi_controller {
-    float kp;
-    float ki;
-    float sampling_time;
-    float ki_ts_by_two;
-    float integral;
-    float prev_error;
-    float output_max;
-    float output_min;
-    float output;
+    float_t kp;
+    float_t ki;
+    float_t sampling_time;
+    float_t ki_ts_by_two;
+    float_t integral;
+    float_t prev_error;
+    float_t output_max;
+    float_t output_min;
+    float_t output;
 };
 
 void pi_controller_init(pi_controller_t* const instance, const pi_controller_cfg_t* const cfg);
 
-float pi_controller_process(pi_controller_t* const instance, float error);
+float_t pi_controller_process(pi_controller_t* const instance, float_t error);
 
-void pi_controller_set_integral(pi_controller_t* const instance, float integral);
+void pi_controller_set_integral(pi_controller_t* const instance, float_t integral);
 
 void pi_controller_reset(pi_controller_t* const instance);
 

@@ -3,9 +3,9 @@
 #include <string.h>
 #include <numeric_constants.h>
 
-static inline float sliding_function(sliding_mode_observer_t* const instance, float est_err)
+static inline float_t sliding_function(sliding_mode_observer_t* const instance, float_t est_err)
 {
-	float retVal = 0.0f;
+	float_t retVal = 0.0f;
 
     if (est_err > instance->boundary)
     {
@@ -27,8 +27,8 @@ void sliding_mode_observer_init(sliding_mode_observer_t* const instance, const s
 {
 	assert(instance != NULL && cfg != NULL);
 
-	float Rs = cfg->rs * 1e-3f;   // mΩ → Ω
-	float Ls = cfg->ls * 1e-3f;   // mH → H
+	float_t Rs = cfg->rs * 1e-3f;   // mΩ → Ω
+	float_t Ls = cfg->ls * 1e-3f;   // mH → H
 
 	instance->sampling_time = ((float_t)cfg->cycle_time / CYCLE_TIME_DIVIDER);
 	instance->inv_ts = 1.0f / instance->sampling_time;
@@ -64,19 +64,19 @@ void sliding_mode_observer_init(sliding_mode_observer_t* const instance, const s
 }
 
 
-void sliding_mode_observer_process(sliding_mode_observer_t* const instance, float v_alpha, float v_beta,  float i_alpha, float i_beta)
+void sliding_mode_observer_process(sliding_mode_observer_t* const instance, float_t v_alpha, float_t v_beta,  float_t i_alpha, float_t i_beta)
 {
 	assert(instance != NULL);
 
 //========================================================================
 	// 1. Calculate the alpha-, beta- current estimation error
-	float i_alpha_est_err = instance->i_alpha_est - i_alpha;
-	float i_beta_est_err = instance->i_beta_est  - i_beta;
+	float_t i_alpha_est_err = instance->i_alpha_est - i_alpha;
+	float_t i_beta_est_err = instance->i_beta_est  - i_beta;
 
 //========================================================================
 	// 2. Calculate and apply the sliding injection
-	float z_alpha = instance->k_sliding_gain * sliding_function(instance, i_alpha_est_err);
-	float z_beta = instance->k_sliding_gain * sliding_function(instance, i_beta_est_err);
+	float_t z_alpha = instance->k_sliding_gain * sliding_function(instance, i_alpha_est_err);
+	float_t z_beta = instance->k_sliding_gain * sliding_function(instance, i_beta_est_err);
 
 //========================================================================
 	// 3. ZOH-based, discrete-time current-observer
@@ -122,7 +122,7 @@ void sliding_mode_observer_process(sliding_mode_observer_t* const instance, floa
 			instance->theta_est -= CONSTANT_TWO_PI;
 		}
 
-		float delta_theta = instance->e_theta - instance->e_theta_last;
+		float_t delta_theta = instance->e_theta - instance->e_theta_last;
 
 		if (delta_theta >= CONSTANT_PI)
 		{
@@ -174,18 +174,18 @@ sliding_mode_observer_emf_est_t sliding_mode_observer_get_emfs(sliding_mode_obse
 	return retVal;
 }
 
-float sliding_mode_observer_get_electrical_angle(sliding_mode_observer_t* const instance)
+float_t sliding_mode_observer_get_electrical_angle(sliding_mode_observer_t* const instance)
 {
 	assert(instance != NULL);
-	float ret_val = 0.0f;
+	float_t ret_val = 0.0f;
 	ret_val = instance->theta_est;
 	return ret_val;
 }
 
-float sliding_mode_observer_get_electrical_speed(sliding_mode_observer_t* const instance)
+float_t sliding_mode_observer_get_electrical_speed(sliding_mode_observer_t* const instance)
 {
 	assert(instance != NULL);
-	float ret_val = 0.0f;
+	float_t ret_val = 0.0f;
 	ret_val = instance->omega_est;
 	return ret_val;
 }

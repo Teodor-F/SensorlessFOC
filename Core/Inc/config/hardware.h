@@ -85,18 +85,8 @@
 
 #define MC_TIM_EVENT1_DBG_PIN	GPIO_PIN_8
 #define MC_TIM_EVENT1_DBG_PORT	GPIOC
-
 #define MC_TIM_EVENT2_DBG_PIN	GPIO_PIN_9
 #define MC_TIM_EVENT2_DBG_PORT	GPIOC
 
-//========================================================================
-	// UART
-#define UART_COMM_REFRESH_RATE_HZ	100u
-#define UART_COMM_TRIG_CNT_VALUE	PWM_FREQ_HZ / UART_COMM_REFRESH_RATE_HZ
-
-//========================================================================
-	// OTHER SYSTEM CONSTANTS
-
-#define SAMPLING_TIME ((float)(1.0f/PWM_FREQ_HZ))
 
 #endif /* CONFIG_HARDWARE_H_ */

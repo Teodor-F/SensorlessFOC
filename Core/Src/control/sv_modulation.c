@@ -7,15 +7,15 @@
 
 #define SV_MIN_VBUS 1.0f
 
-static inline float max_3(const float v_a, const float v_b,  const float v_c)
+static inline float_t max_3(const float_t v_a, const float_t v_b,  const float_t v_c)
 {
-    float max = (v_a > v_b) ? v_a : v_b;
+    float_t max = (v_a > v_b) ? v_a : v_b;
     return (max > v_c) ? max : v_c;
 }
 
-static inline float min_3(const float v_a, const float v_b,  const float v_c)
+static inline float_t min_3(const float_t v_a, const float_t v_b,  const float_t v_c)
 {
-    float min = (v_a < v_b) ? v_a : v_b;
+    float_t min = (v_a < v_b) ? v_a : v_b;
     return (min < v_c) ? min : v_c;
 }
 
@@ -29,34 +29,34 @@ void sv_modulation_init(sv_modulation_t *const instance, const sv_modulation_cfg
 	instance->mod_state = SV_MODULATION_DISABLED;
 }
 
-void sv_modulation_process(sv_modulation_t *const instance, float electrical_angle)
+void sv_modulation_process(sv_modulation_t *const instance, float_t electrical_angle)
 {
 
-	float sin_value = sinf(electrical_angle);
-	float cos_value = cosf(electrical_angle);
+	float_t sin_value = sinf(electrical_angle);
+	float_t cos_value = cosf(electrical_angle);
 	// Inverse Park-transformation
 	sv_inv_park_transform(instance->v_d, instance->v_q, sin_value, cos_value, &instance->v_alfa, &instance->v_beta);
 
-	float va;
-	float vb;
-	float vc;
+	float_t va;
+	float_t vb;
+	float_t vc;
 	// Inverse Clarke-transformation
 	sv_inv_clarke_transform(instance->v_alfa, instance->v_beta, &va, &vb, &vc);
 
 	// Calculating the average of the two highest voltage components
-	float v_max = max_3(va, vb, vc);
-	float v_min = min_3(va, vb, vc);
-	float v_offs = ONE_BY_TWO * (v_max + v_min);
+	float_t v_max = max_3(va, vb, vc);
+	float_t v_min = min_3(va, vb, vc);
+	float_t v_offs = ONE_BY_TWO * (v_max + v_min);
 
 	// Center the 3 phases around 0
 	va -= v_offs;
 	vb -= v_offs;
 	vc -= v_offs;
 
-	float inv_vbus = instance->inv_v_bus;
-	float du = (va * inv_vbus) + 0.5f;
-	float dv = (vb * inv_vbus) + 0.5f;
-	float dw = (vc * inv_vbus) + 0.5f;
+	float_t inv_vbus = instance->inv_v_bus;
+	float_t du = (va * inv_vbus) + 0.5f;
+	float_t dv = (vb * inv_vbus) + 0.5f;
+	float_t dw = (vc * inv_vbus) + 0.5f;
 
 
 	if (du < 0.0f)
@@ -82,7 +82,7 @@ void sv_modulation_process(sv_modulation_t *const instance, float electrical_ang
 	pwm_set_duty_cycles(pwm, dc_phase_u, dc_phase_v, dc_phase_w);
 }
 
-void sv_modulation_set_vbus(sv_modulation_t *const instance, const float new_vbus)
+void sv_modulation_set_vbus(sv_modulation_t *const instance, const float_t new_vbus)
 {
 	if(new_vbus > SV_MIN_VBUS)
 	{
@@ -101,13 +101,13 @@ void sv_modulation_set_state(sv_modulation_t *const instance, sv_modulation_stat
 	instance->mod_state = new_modulation_state;
 }
 
-void sv_modulation_set_target_vd_vq(sv_modulation_t *const instance, const float new_vd, const float new_vq)
+void sv_modulation_set_target_vd_vq(sv_modulation_t *const instance, const float_t new_vd, const float_t new_vq)
 {
 	instance->v_d = new_vd;
 	instance->v_q = new_vq;
 }
 
-void sv_modulation_get_v_alfa_v_beta(sv_modulation_t *const instance, float *v_alfa_ptr, float *v_beta_ptr)
+void sv_modulation_get_v_alfa_v_beta(sv_modulation_t *const instance, float_t *v_alfa_ptr, float_t *v_beta_ptr)
 {
 	*v_alfa_ptr = instance->v_alfa;
 	*v_beta_ptr = instance->v_beta;

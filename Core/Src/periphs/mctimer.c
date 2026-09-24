@@ -41,8 +41,8 @@ void mc_timer_init(mc_timer_t *const instance)
 	instance->half_period_value = roundf(instance->periph_freq / (2u * PWM_FREQ_HZ));
 	instance->period_value = 2 * instance->half_period_value - 1;
 
-	instance->first_callback_trig_pt = (uint32_t)((float)instance->period_value * 0.25f);
-	instance->second_callback_trig_pt = (uint32_t)((float)instance->period_value * 0.75f);
+	instance->first_callback_trig_pt = (uint32_t)((float_t)instance->period_value * 0.25f);
+	instance->second_callback_trig_pt = (uint32_t)((float_t)instance->period_value * 0.75f);
 
 
 	TIM_ClockConfigTypeDef sClockSourceConfig = {0};

@@ -30,15 +30,17 @@ static lpf_first_order_t lpf_iq_istance = {0};
 
 void control_layer_initializer(void)
 {
+	uint32_t motor_max_rpm = motor_cfg_get_motor_max_rpm();
+	float_t motor_max_current = motor_cfg_get_motor_max_current();
+	float_t motor_nom_voltage = motor_cfg_get_motor_nom_voltage();
 
 //========================================================================
 	// Velocity controller initialization
-	uint32_t motor_max_rpm = motor_cfg_get_motor_max_rpm();
 	velocity_controller_cfg_t velocity_cntrl_cfg = {
-		.kp = 1.25f,
-		.ki = 3.75f,
+		.kp = 1.75f,
+		.ki = 4.5f,
 		.velocity_ref_limit = motor_max_rpm,
-		.iq_max_out = 1000.0f,
+		.iq_max_out = motor_max_current,
 		.cycle_time = MOTOR_CONTROL_CYCLE_TIME_250
 	};
 	velocity_controller_init(&velocity_cntrl_instance, &velocity_cntrl_cfg);
@@ -89,18 +91,13 @@ void control_layer_initializer(void)
 	lpf_id = &lpf_id_instance;
 	lpf_iq = &lpf_iq_istance;
 
-
-	float_t motor_nominal_voltage = motor_cfg_get_motor_nom_voltage();
-	float_t motor_stator_resistance = motor_cfg_get_motor_stator_resistance();
-	float_t motor_stator_inductance =  motor_cfg_get_motor_stator_inductance();
-	float_t motor_max_current = motor_cfg_get_motor_max_current();
 	current_controller_cfg_t curr_cntrl_cfg = {
 		.kp_id = 0.045,
 		.ki_id = 85.0f,
 		.kp_iq = 0.045,
 		.ki_iq = 85.0f,
-		.vd_out_limit = motor_nominal_voltage * ONE_BY_SQRT_THREE,
-		.vq_out_limit =  motor_nominal_voltage * ONE_BY_SQRT_THREE,
+		.vd_out_limit = motor_nom_voltage * ONE_BY_SQRT_THREE,
+		.vq_out_limit =  motor_nom_voltage * ONE_BY_SQRT_THREE,
 		.cycle_time = CURRENT_CONTROL_CYCLE_TIME
 	};
 	current_controller_init(&curr_cntrl_instance, &curr_cntrl_cfg);
@@ -108,7 +105,6 @@ void control_layer_initializer(void)
 
 //========================================================================
 	// Space vector modulation initialization
-	float_t motor_nom_voltage = motor_cfg_get_motor_nom_voltage();
 	sv_modulation_cfg_t sv_modulation_cfg = {
 		.v_bus = motor_nom_voltage,
 	};

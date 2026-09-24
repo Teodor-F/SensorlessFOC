@@ -7,12 +7,12 @@ void lpf_butterworth_init(lpf_butterworth_t* const instance, const lpf_butterwor
 {
 	assert(instance != NULL && cfg != NULL);
 
-    float w = CONSTANT_TWO_PI * (cfg->cutoff_freq / cfg->sampling_freq);
-    float Q = 1.0f / SQRT_TWO;
-    float alpha = sinf(w) / (2.0f * Q);
+    float_t w = CONSTANT_TWO_PI * (cfg->cutoff_freq / cfg->sampling_freq);
+    float_t Q = 1.0f / SQRT_TWO;
+    float_t alpha = sinf(w) / (2.0f * Q);
 
-    float cos_w0 = cosf(w);
-    float a0 = 1.0f + alpha;
+    float_t cos_w0 = cosf(w);
+    float_t a0 = 1.0f + alpha;
 
     // Butterworth coefficients
     instance->b0 = (1.0f - cos_w0) / (2.0f * a0);
@@ -30,9 +30,9 @@ void lpf_butterworth_init(lpf_butterworth_t* const instance, const lpf_butterwor
 
 }
 
-void lpf_butterworth_process(lpf_butterworth_t* const instance, float input_value)
+void lpf_butterworth_process(lpf_butterworth_t* const instance, float_t input_value)
 {
-	float output = 	instance->b0 * input_value 	+
+	float_t output = 	instance->b0 * input_value 	+
 					instance->b1 * instance->x1 +
 					instance->b2 * instance->x2 -
 					instance->a1 * instance->y1 -
@@ -46,8 +46,8 @@ void lpf_butterworth_process(lpf_butterworth_t* const instance, float input_valu
 	instance->processed_value = output;
 }
 
-float lpf_butterworth_get_value(lpf_butterworth_t* const instance)
+float_t lpf_butterworth_get_value(lpf_butterworth_t* const instance)
 {
-	float ret_val = instance->processed_value;
+	float_t ret_val = instance->processed_value;
 	return ret_val;
 }

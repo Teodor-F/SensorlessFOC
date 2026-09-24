@@ -28,34 +28,34 @@ void current_controller_init(current_controller_t* const instance, const current
 
 }
 
-void current_controller_process(current_controller_t* const instance, float id_current_actual, float iq_current_actual)
+void current_controller_process(current_controller_t* const instance, float_t id_current_actual, float_t iq_current_actual)
 {
-	float id_error = instance->id_ref - id_current_actual;
+	float_t id_error = instance->id_ref - id_current_actual;
 	instance->vd_out = pi_controller_process(&instance->id_pi_cntrl, id_error);
 
-	float iq_error = instance->iq_ref - iq_current_actual;
+	float_t iq_error = instance->iq_ref - iq_current_actual;
 	instance->vq_out = pi_controller_process(&instance->iq_pi_cntrl, iq_error);
 }
 
-void current_controller_set_target_id(current_controller_t* const instance, float new_id)
+void current_controller_set_target_id(current_controller_t* const instance, float_t new_id)
 {
 	instance->id_ref = new_id;
 }
 
-void current_controller_set_target_iq(current_controller_t* const instance, float new_iq)
+void current_controller_set_target_iq(current_controller_t* const instance, float_t new_iq)
 {
 	instance->iq_ref = new_iq;
 }
 
-float current_controller_get_target_id(current_controller_t* const instance)
+float_t current_controller_get_target_id(current_controller_t* const instance)
 {
-	float ret_val = instance->id_ref;
+	float_t ret_val = instance->id_ref;
 	return ret_val;
 }
 
-float current_controller_get_target_iq(current_controller_t* const instance)
+float_t current_controller_get_target_iq(current_controller_t* const instance)
 {
-	float ret_val = instance->iq_ref;
+	float_t ret_val = instance->iq_ref;
 	return ret_val;
 }
 

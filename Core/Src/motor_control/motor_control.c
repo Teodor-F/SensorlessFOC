@@ -6,6 +6,8 @@
 #include <motor_control_manager_initializer.h>
 
 
+//========================================================================
+	// Builtin LED initialization
 static void init_builtin_led(void)
 {
 	__HAL_RCC_GPIOA_CLK_ENABLE();
@@ -17,6 +19,8 @@ static void init_builtin_led(void)
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 }
 
+//========================================================================
+	// User button initialization. Button is used for emergency stopping.
 static void init_user_button(void)
 {
 	__HAL_RCC_GPIOC_CLK_ENABLE();

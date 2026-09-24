@@ -436,10 +436,10 @@ uint32_t hall_getActElectricalPosition(void)
    return retVal;
 }
 
-float hall_getElectricalAngle(void)
+float_t hall_getElectricalAngle(void)
 {
-	float angle = 0.0f;
-	angle = ((((float)self.electricalPosition) + 0.5f) * (CONSTANT_TWO_PI / (float)HALL_SECTORS));
+	float_t angle = 0.0f;
+	angle = ((((float_t)self.electricalPosition) + 0.5f) * (CONSTANT_TWO_PI / (float_t)HALL_SECTORS));
 	if(angle >= CONSTANT_TWO_PI)
 	{
 		angle -= CONSTANT_TWO_PI;
