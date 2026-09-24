@@ -4,10 +4,12 @@
 #include <mc_types.h>
 #include <mc_callback.h>
 
+#define CYCLE_TIME_DIVIDER ((uint32_t)(1000000000u))  // 1 second in nanoseconds
+
+
 typedef enum motor_control_task_1_subtask_type motor_control_task_1_subtask_type_t;
 typedef enum motor_control_task_2_subtask_type motor_control_task_2_subtask_type_t;
 typedef enum motor_control_request motor_control_request_t;
-
 typedef enum motor_control_cycle_time motor_control_cycle_time_t;
 typedef enum motor_control_state motor_control_state_t;
 
@@ -15,8 +17,6 @@ typedef struct motor_control_subtask motor_control_subtask_t;
 typedef struct motor_control_manager_cfg motor_control_manager_cfg_t;
 typedef struct motor_control_manager motor_control_manager_t;
 
-
-#define CYCLE_TIME_DIVIDER ((uint32_t)(1000000000u))  // 1 second in nanoseconds
 
 enum motor_control_cycle_time {
     MOTOR_CONTROL_CYCLE_TIME_62_50 	= 62500u,       // [us]
@@ -40,6 +40,8 @@ enum motor_control_task_1_subtask_type
 {
     MC_TASK_1_COMMUNICATION = 0u,
     MC_TASK_1_STATE_MACHINE,
+    MC_TASK_1_VELOCITY_MEASURE,
+    MC_TASK_1_VELOCITY_CONTROL,
     MC_TASK_1_COUNT
 };
 
@@ -48,8 +50,6 @@ enum motor_control_task_2_subtask_type
     MC_TASK_2_CURRENT_TRANSFORMATION = 0u,
 	MC_TASK_2_REVUP,
     MC_TASK_2_OBSERVER,
-    MC_TASK_2_VELOCITY_MEASURE,
-    MC_TASK_2_VELOCITY_CONTROL,
     MC_TASK_2_CURRENT_CONTROL,
     MC_TASK_2_MODULATION,
     MC_TASK_2_COUNT
@@ -73,8 +73,6 @@ struct motor_control_subtask {
 };
 
 struct motor_control_manager {
-//========================================================================
-	// Internal config
 	motor_control_state_t mc_state;
 	uint32_t time_base;
 	motor_control_subtask_t task_1_subtasks[MC_TASK_1_COUNT];

@@ -1,4 +1,5 @@
 #include <motor_control_manager.h>
+
 #include <control_layer_initializer.h>
 #include <measurement_layer_initializer.h>
 #include <periph_layer_initializer.h>
@@ -46,7 +47,6 @@ static void motor_control_manager_reset(void)
 	velocity_controller_reset(velocity_controller);
 	current_transformation_reset(current_transformation);
 	revup_controller_reset(revup_controller);
-
 	sliding_mode_observer_reset(smo);
 	velocity_measure_reset(velocity_measure);
 }
@@ -122,7 +122,6 @@ static void motor_control_state_machine(void)
 					motor_control_manager_deactivate_request(MC_STOP_REQUEST);
 					motor_control_manager_activate_request(MC_RESET_REQUEST);
 					mc_mngr_instance.mc_state = MC_STATE_IDLE;
-
 				}
 			}
 			break;
@@ -276,27 +275,37 @@ void motor_control_manager_init()
 	mc_mngr_instance.mc_state = MC_STATE_IDLE;
 	mc_mngr_instance.time_base = CYCLE_TIME_DIVIDER / mc_timer_get_freq(mc_timer);
 
+//========================================================================
+	// Register the subtasks used for motor control
 	motor_control_manager_register_subtask(&mc_mngr_instance.task_1_subtasks[MC_TASK_1_COMMUNICATION], COMMUNICATION_CYCLE_TIME, communication_subtask, NULL);
 	motor_control_manager_register_subtask(&mc_mngr_instance.task_1_subtasks[MC_TASK_1_STATE_MACHINE], STATE_MACHINE_CYCLE_TIME, state_machine_subtask, NULL);
+	motor_control_manager_register_subtask(&mc_mngr_instance.task_1_subtasks[MC_TASK_1_VELOCITY_MEASURE], VELOCITY_MEASURE_CYCYLE_TIME, velocity_measure_substask, NULL);
+	motor_control_manager_register_subtask(&mc_mngr_instance.task_1_subtasks[MC_TASK_1_VELOCITY_CONTROL], VELOCITY_CONTROL_CYCLE_TIME, velocity_control_subtask, NULL);
 	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_CURRENT_TRANSFORMATION], CURRENT_TRANS_CYCYLE_TIME, current_transformation_subtask, NULL);
 	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_REVUP], REVUP_CONTROLLER_CYCLE_TIME, revup_controller_subtask, NULL);
 	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_OBSERVER], OBSERVER_CYCLE_TIME, observer_subtask, NULL);
-	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_VELOCITY_MEASURE], VELOCITY_MEASURE_CYCYLE_TIME, velocity_measure_substask, NULL);
-	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_VELOCITY_CONTROL], VELOCITY_CONTROL_CYCLE_TIME, velocity_control_subtask, NULL);
 	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_CURRENT_CONTROL], CURRENT_CONTROL_CYCLE_TIME, current_controller_subtask, NULL);
 	motor_control_manager_register_subtask(&mc_mngr_instance.task_2_subtasks[MC_TASK_2_MODULATION], MODULATION_CYCLE_TIME, modulation_subtask, NULL);
 
+//========================================================================
+	// Reset every request
 	for (uint32_t idx = 0; idx < MC_REQUEST_COUNT; ++idx)
 	{
 		mc_mngr_instance.motor_control_request[idx] = FALSE;
 	}
 
+//=======================================================================================
+	// Motor control subtasks in motor_control_task_2 are executed at 25% of PWM-cycle
 	mc_timer_register_mc_callback(mc_timer, MCTIMER_CB_IDX_1, motor_control_task_1, NULL);
+
+//=======================================================================================
+	// Motor control subtasks in  motor_control_task_2 are executed at 75% of PWM-cycle
 	mc_timer_register_mc_callback(mc_timer, MCTIMER_CB_IDX_2, motor_control_task_2, NULL);
+
+//=======================================================================================
+	// Timer synchronization, pwm-timer=master, mc-timer=slave
 	mc_timer_activate_callback(mc_timer, MCTIMER_CB_IDX_1);
 	mc_timer_activate_callback(mc_timer, MCTIMER_CB_IDX_2);
-
-	// Synchronize timers
 	mc_timer_start(mc_timer);
 	pwm_start(pwm);
 }
