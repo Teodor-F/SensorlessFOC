@@ -36,8 +36,6 @@ struct sliding_mode_observer {
 	float_t i_beta_est;
 	float_t e_alpha_est;
 	float_t e_beta_est;
-	float_t e_theta;
-	float_t e_theta_last;
 	float_t emf_threshold;
 	uint32_t valid_emf_sample_cntr;
 	uint32_t valid_emf_sample_cntr_threshold;

@@ -103,15 +103,7 @@ void sliding_mode_observer_process(sliding_mode_observer_t* const instance, floa
 			instance->smo_locked = true;
 		}
 
-		instance->e_theta = atan2f(instance->e_beta_est, instance->e_alpha_est);
-		if(instance->omega_est > 0.0f)
-		{
-			instance->theta_est = instance->e_theta - (CONSTANT_PI * ONE_BY_TWO);
-		}
-		else
-		{
-			instance->theta_est = instance->e_theta + (CONSTANT_PI * ONE_BY_TWO);
-		}
+		instance->theta_est = -atan2f(instance->e_alpha_est, instance->e_beta_est);
 
 		if(instance->theta_est < 0.0f)
 		{
@@ -122,7 +114,7 @@ void sliding_mode_observer_process(sliding_mode_observer_t* const instance, floa
 			instance->theta_est -= CONSTANT_TWO_PI;
 		}
 
-		float_t delta_theta = instance->e_theta - instance->e_theta_last;
+		float_t delta_theta = instance->theta_est - instance->theta_est_prev;
 
 		if (delta_theta >= CONSTANT_PI)
 		{
@@ -141,7 +133,7 @@ void sliding_mode_observer_process(sliding_mode_observer_t* const instance, floa
 			instance->idx = 0;
 		}
 		instance->omega_est = instance->delta_theta_sum * instance->inv_n_ts;
-		instance->e_theta_last = instance->e_theta;
+		instance->theta_est_prev = instance->theta_est;
 	}
 	else
 	{
