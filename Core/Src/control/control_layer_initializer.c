@@ -37,8 +37,8 @@ void control_layer_initializer(void)
 //========================================================================
 	// Velocity controller initialization
 	velocity_controller_cfg_t velocity_cntrl_cfg = {
-		.kp = 1.75f,
-		.ki = 4.5f,
+		.kp = 1.85f,
+		.ki = 4.25f,
 		.velocity_ref_limit = motor_max_rpm,
 		.iq_max_out = motor_max_current,
 		.cycle_time = MOTOR_CONTROL_CYCLE_TIME_250
