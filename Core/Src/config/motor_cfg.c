@@ -43,7 +43,7 @@ float_t motor_cfg_get_motor_stator_inductance(void)
 
 uint32_t motor_cfg_get_motor_max_rpm(void)
 {
-    float_t ret_val;
+	uint32_t ret_val;
     ret_val = motor_config.max_rpm;
     return ret_val;
 }

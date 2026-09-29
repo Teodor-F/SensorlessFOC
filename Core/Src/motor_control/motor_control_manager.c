@@ -1,5 +1,4 @@
 #include <motor_control_manager.h>
-
 #include <control_layer_initializer.h>
 #include <measurement_layer_initializer.h>
 #include <periph_layer_initializer.h>
@@ -24,6 +23,48 @@ static inline bool_t motor_control_manager_is_request_active(motor_control_reque
 {
 	bool_t ret_val = mc_mngr_instance.motor_control_request[mc_request];
 	return ret_val;
+}
+
+
+static void motor_control_manager_process_foc_command(const uint8_t* buf, uint16_t size)
+{
+	// size_t foc_cmd_size = sizeof(foc_command_frame_t) = 7
+
+    const foc_command_frame_t* cmd = (const foc_command_frame_t*)buf;
+
+    if(cmd->header != FOC_FRAME_HEADER)
+    {
+        return;
+    }
+
+    switch(cmd->foc_command)
+    {
+        case FOC_CMD_START:
+        {
+            motor_control_manager_activate_request(MC_REVUP_REQUEST);
+            break;
+        }
+
+        case FOC_CMD_STOP:
+        {
+            motor_control_manager_activate_request(MC_STOP_REQUEST);
+            break;
+        }
+
+        case FOC_CMD_SET_SPEED:
+        {
+        	if(mc_mngr_instance.mc_state == MC_STATE_CLOSED_LOOP)
+        	{
+                velocity_controller_set_target_velocity(velocity_controller, cmd->foc_param);
+        	}
+            break;
+        }
+
+        default:
+        {
+            break;
+        }
+    }
 }
 
 static float_t motor_control_manager_get_electrical_angle(void)
@@ -72,6 +113,14 @@ static void motor_control_manager_execute_subtask(motor_control_subtask_t *const
 		}
 		subtask->cycle_cnt = 0;
 	}
+}
+
+static void motor_control_foc_command_callback(mc_callback_param_t param)
+{
+    UNUSED(param);
+    const uint8_t *rx_data = uart_get_rx_data(uart);
+    uint16_t rx_data_size = uart_get_rx_data_size(uart);
+    motor_control_manager_process_foc_command(rx_data, rx_data_size);
 }
 
 static void motor_control_state_machine(void)
@@ -133,8 +182,7 @@ static void motor_control_state_machine(void)
 	}
 }
 
-
-static void communication_subtask(mc_callback_param_t param)
+static void telemetry_subtask(mc_callback_param_t param)
 {
 	UNUSED(param);
 	current_measure_act_curr_t curr_abc = current_measure_get_currents(current_measure);
@@ -214,7 +262,7 @@ static void velocity_control_subtask(mc_callback_param_t param)
 {
 	UNUSED(param);
 
-	float_t rpm = velocity_measure_get_rpm(velocity_measure);
+	uint32_t rpm = velocity_measure_get_rpm(velocity_measure);
 	if (mc_mngr_instance.mc_state == MC_STATE_CLOSED_LOOP)
 	{
 		velocity_controller_process(velocity_controller, rpm);
@@ -277,7 +325,7 @@ void motor_control_manager_init()
 
 //========================================================================
 	// Register the subtasks used for motor control
-	motor_control_manager_register_subtask(&mc_mngr_instance.task_1_subtasks[MC_TASK_1_COMMUNICATION], COMMUNICATION_CYCLE_TIME, communication_subtask, NULL);
+	motor_control_manager_register_subtask(&mc_mngr_instance.task_1_subtasks[MC_TASK_1_TELEMETRY], TELEMETRY_CYCLE_TIME, telemetry_subtask, NULL);
 	motor_control_manager_register_subtask(&mc_mngr_instance.task_1_subtasks[MC_TASK_1_STATE_MACHINE], STATE_MACHINE_CYCLE_TIME, state_machine_subtask, NULL);
 	motor_control_manager_register_subtask(&mc_mngr_instance.task_1_subtasks[MC_TASK_1_VELOCITY_MEASURE], VELOCITY_MEASURE_CYCYLE_TIME, velocity_measure_substask, NULL);
 	motor_control_manager_register_subtask(&mc_mngr_instance.task_1_subtasks[MC_TASK_1_VELOCITY_CONTROL], VELOCITY_CONTROL_CYCLE_TIME, velocity_control_subtask, NULL);
@@ -293,6 +341,10 @@ void motor_control_manager_init()
 	{
 		mc_mngr_instance.motor_control_request[idx] = FALSE;
 	}
+
+//=======================================================================================
+	// Handle the commands received for the GUI-App
+	uart_register_rx_event_callback(uart, motor_control_foc_command_callback, NULL);
 
 //=======================================================================================
 	// Motor control subtasks in motor_control_task_2 are executed at 25% of PWM-cycle

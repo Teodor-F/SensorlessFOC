@@ -25,7 +25,7 @@ enum motor_control_cycle_time {
 	MOTOR_CONTROL_CYCLE_TIME_500   	= 500000u,      // [us]
 	MOTOR_CONTROL_CYCLE_TIME_1000  	= 1000000u,     // [us]
 	MOTOR_CONTROL_CYCLE_TIME_2000  	= 2000000u,		// [us]
-	MOTOR_CONTROLCYCLE_TIME_5000	= 5000000u,		// [us]
+	MOTOR_CONTROL_CYCLE_TIME_5000	= 5000000u,		// [us]
 	MOTOR_CONTROL_CYCLE_TIME_10000	= 10000000u		// [us]
 };
 
@@ -38,7 +38,7 @@ enum motor_control_state {
 
 enum motor_control_task_1_subtask_type
 {
-    MC_TASK_1_COMMUNICATION = 0u,
+    MC_TASK_1_TELEMETRY = 0u,
     MC_TASK_1_STATE_MACHINE,
     MC_TASK_1_VELOCITY_MEASURE,
     MC_TASK_1_VELOCITY_CONTROL,
@@ -48,9 +48,9 @@ enum motor_control_task_1_subtask_type
 enum motor_control_task_2_subtask_type
 {
     MC_TASK_2_CURRENT_TRANSFORMATION = 0u,
+    MC_TASK_2_CURRENT_CONTROL,
 	MC_TASK_2_REVUP,
     MC_TASK_2_OBSERVER,
-    MC_TASK_2_CURRENT_CONTROL,
     MC_TASK_2_MODULATION,
     MC_TASK_2_COUNT
 };

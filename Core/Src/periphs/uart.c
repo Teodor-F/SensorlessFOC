@@ -62,6 +62,9 @@ void uart_init(uart_t *const instance)
 	instance->uart_dma_rx = &dma_usart_rx;
 
 	p_uart = instance;
+
+	HAL_UARTEx_ReceiveToIdle_DMA(&(instance->uart_periph), instance->rx_buf, UART_RX_BUFFER_SIZE);
+
 	HAL_NVIC_SetPriority(USART2_IRQn, 0, 0);
 	HAL_NVIC_EnableIRQ(USART2_IRQn);
 }
@@ -73,11 +76,16 @@ void uart_transmit(uart_t *const instance, const uint8_t *tx_data, uint16_t tx_d
 	HAL_UART_Transmit_DMA(&instance->uart_periph, (const uint8_t*)tx_data, tx_data_size);
 }
 
-void uart_receive(uart_t *const instance, uint8_t *rx_buf, uint16_t rx_buf_size)
+const uint8_t* uart_get_rx_data(uart_t *const instance)
 {
-	assert(rx_buf != NULL);
-	instance->rx_size = rx_buf_size;
-	HAL_UARTEx_ReceiveToIdle_DMA(&(instance->uart_periph), rx_buf, rx_buf_size);
+	uint8_t *ret_val = instance->rx_buf;
+	return ret_val;
+}
+
+uint16_t uart_get_rx_data_size(uart_t *const instance)
+{
+	uint16_t ret_val = instance->rx_size;
+	return ret_val;
 }
 
 void uart_register_rx_event_callback(uart_t *const instance, mc_callback_function_t rx_function , mc_callback_param_t param)
@@ -147,5 +155,12 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 	}
 }
 
+void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
+{
+	UNUSED(huart);
+	p_uart->rx_size = Size;
+    mc_callback_execute(&(p_uart->rx_event_callback));
+    HAL_UARTEx_ReceiveToIdle_DMA(&(p_uart->uart_periph), p_uart->rx_buf, UART_RX_BUFFER_SIZE);
+}
 
 

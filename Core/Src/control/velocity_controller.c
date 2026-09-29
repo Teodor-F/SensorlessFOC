@@ -11,24 +11,29 @@ void velocity_controller_init(velocity_controller_t *const instance, const veloc
 	};
 	pi_controller_init(&instance->velocity_pi_cntrl, &pi_velocity_cfg);
 	instance->sampling_time = ((float_t)cfg->cycle_time / CYCLE_TIME_DIVIDER);
-	instance->velocity_ref = 0.0f;
+	instance->velocity_ref = 0;
+	instance->velocity_ref_limit = cfg->velocity_ref_limit;
 	instance->iq_out = 0.0f;
 }
 
-void velocity_controller_process(velocity_controller_t *const instance, float_t velocity_actual)
+void velocity_controller_process(velocity_controller_t *const instance, uint32_t velocity_actual)
 {
-	float_t velocity_error = instance->velocity_ref - velocity_actual;
+	float_t velocity_error = (float_t)instance->velocity_ref - (float_t)velocity_actual;
 	instance->iq_out = pi_controller_process(&instance->velocity_pi_cntrl, velocity_error);
 }
 
-void velocity_controller_set_target_velocity(velocity_controller_t *const instance, float_t new_velocity)
+void velocity_controller_set_target_velocity(velocity_controller_t *const instance, uint32_t new_velocity)
 {
+	if(new_velocity > instance->velocity_ref_limit)
+	{
+		new_velocity = instance->velocity_ref_limit;
+	}
 	instance->velocity_ref = new_velocity;
 }
 
-float_t velocity_controller_get_target_velocity(velocity_controller_t *const instance)
+uint32_t velocity_controller_get_target_velocity(velocity_controller_t *const instance)
 {
-	float_t ret_val = instance->velocity_ref;
+	float_t ret_val = (uint32_t)instance->velocity_ref;
 	return ret_val;
 }
 

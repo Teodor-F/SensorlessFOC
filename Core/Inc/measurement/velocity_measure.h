@@ -25,7 +25,7 @@ void velocity_measure_init(velocity_measure_t *const instance, velocity_measure_
 
 void velocity_measure_process(velocity_measure_t *const instance, float_t omega_electrical_rad_s);
 
-float_t velocity_measure_get_rpm(velocity_measure_t *const instance);
+uint32_t velocity_measure_get_rpm(velocity_measure_t *const instance);
 
 void velocity_measure_reset(velocity_measure_t *const instance);
 
