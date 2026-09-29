@@ -1,9 +1,0 @@
-../Core/Src/periphs/mctimer.c:30:6:HAL_TIM_OC_DelayElapsedCallback	16	static
-../Core/Src/periphs/mctimer.c:50:6:TIM3_IRQHandler	8	static
-../Core/Src/periphs/mctimer.c:55:6:mc_timer_init	112	static
-../Core/Src/periphs/mctimer.c:146:6:mc_timer_start	8	static
-../Core/Src/periphs/mctimer.c:153:6:mc_timer_stop	8	static
-../Core/Src/periphs/mctimer.c:160:6:mc_timer_reset	8	static
-../Core/Src/periphs/mctimer.c:172:6:mc_timer_register_mc_callback	24	static
-../Core/Src/periphs/mctimer.c:188:6:mc_timer_activate_callback	16	static,ignoring_inline_asm
-../Core/Src/periphs/mctimer.c:208:6:mc_timer_deactivate_callback	24	static,ignoring_inline_asm

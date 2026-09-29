@@ -1,8 +1,0 @@
-../Core/Src/periphs/hall.c:154:6:HAL_TIM_IC_CaptureCallback	24	static,ignoring_inline_asm
-../Core/Src/periphs/hall.c:167:17:checkHallSignals	48	static
-../Core/Src/periphs/hall.c:282:13:resetValues	16	static
-../Core/Src/periphs/hall.c:310:6:TIM2_IRQHandler	8	static
-../Core/Src/periphs/hall.c:317:6:hall_init	88	static
-../Core/Src/periphs/hall.c:421:10:hall_getPosition	16	static
-../Core/Src/periphs/hall.c:428:10:hall_getActElectricalPosition	16	static
-../Core/Src/periphs/hall.c:439:7:hall_getElectricalAngle	16	static

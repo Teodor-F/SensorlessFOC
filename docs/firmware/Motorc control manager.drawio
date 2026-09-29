@@ -1,0 +1,58 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="Kety_Zhva9XCvWw3nlgL">
+    <mxGraphModel dx="2896" dy="1106" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="cDGHJ-dsKoAmQWKpD8uS-32" connectable="0" parent="1" style="group" value="" vertex="1">
+          <mxGeometry height="460" width="1350" x="-660" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="cDGHJ-dsKoAmQWKpD8uS-7" parent="cDGHJ-dsKoAmQWKpD8uS-32" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFCC;strokeColor=light-dark(#000000, #6d5100);" value="" vertex="1">
+          <mxGeometry height="460" width="1350" as="geometry" />
+        </mxCell>
+        <mxCell id="cDGHJ-dsKoAmQWKpD8uS-8" parent="cDGHJ-dsKoAmQWKpD8uS-32" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;font-size: 28px;&quot;&gt;&lt;b style=&quot;&quot;&gt;Motor control manager&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="70" width="810" x="270" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cDGHJ-dsKoAmQWKpD8uS-12" connectable="0" parent="cDGHJ-dsKoAmQWKpD8uS-32" style="group" value="" vertex="1">
+          <mxGeometry height="200" width="590" x="80" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="cDGHJ-dsKoAmQWKpD8uS-10" parent="cDGHJ-dsKoAmQWKpD8uS-12" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CCE5FF;verticalAlign=top;" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;&lt;b style=&quot;&quot;&gt;Motor control task 1&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="200" width="590" as="geometry" />
+        </mxCell>
+        <mxCell id="cDGHJ-dsKoAmQWKpD8uS-1" parent="cDGHJ-dsKoAmQWKpD8uS-12" style="rounded=1;whiteSpace=wrap;html=1;fontSize=13;fontStyle=1;fillColor=#66B2FF;" value="&lt;span&gt;&lt;span&gt;Telemetry subtask&lt;/span&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="85.71428571428572" width="120" x="25" y="57.142857142857146" as="geometry" />
+        </mxCell>
+        <mxCell id="cDGHJ-dsKoAmQWKpD8uS-2" parent="cDGHJ-dsKoAmQWKpD8uS-12" style="rounded=1;whiteSpace=wrap;html=1;fontSize=13;fontStyle=1;fillColor=#66B2FF;" value="State-machine subtask" vertex="1">
+          <mxGeometry height="85.71428571428572" width="120" x="165" y="57.142857142857146" as="geometry" />
+        </mxCell>
+        <mxCell id="cDGHJ-dsKoAmQWKpD8uS-3" parent="cDGHJ-dsKoAmQWKpD8uS-12" style="rounded=1;whiteSpace=wrap;html=1;fontSize=13;fontStyle=1;fillColor=#66B2FF;" value="Velocity measure subtask" vertex="1">
+          <mxGeometry height="85.71428571428572" width="120" x="305" y="57.142857142857146" as="geometry" />
+        </mxCell>
+        <mxCell id="cDGHJ-dsKoAmQWKpD8uS-4" parent="cDGHJ-dsKoAmQWKpD8uS-12" style="rounded=1;whiteSpace=wrap;html=1;fontSize=13;fontStyle=1;fillColor=#66B2FF;" value="Velocity control subtask" vertex="1">
+          <mxGeometry height="85.71428571428572" width="120" x="445" y="57.142857142857146" as="geometry" />
+        </mxCell>
+        <mxCell id="cDGHJ-dsKoAmQWKpD8uS-31" connectable="0" parent="cDGHJ-dsKoAmQWKpD8uS-32" style="group;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="200" width="590" x="700" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="cDGHJ-dsKoAmQWKpD8uS-14" parent="cDGHJ-dsKoAmQWKpD8uS-31" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;verticalAlign=top;strokeColor=light-dark(#282b27, #446e2c);" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;&lt;b style=&quot;&quot;&gt;Motor control task 2&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="200" width="590" as="geometry" />
+        </mxCell>
+        <mxCell id="cDGHJ-dsKoAmQWKpD8uS-15" parent="cDGHJ-dsKoAmQWKpD8uS-31" style="rounded=1;whiteSpace=wrap;html=1;fontSize=13;fontStyle=1;fillColor=#99FF99;" value="&lt;span&gt;&lt;span&gt;Current Transformation Subtask&lt;/span&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="85.71" width="105" x="22.5" y="57.150000000000006" as="geometry" />
+        </mxCell>
+        <mxCell id="cDGHJ-dsKoAmQWKpD8uS-23" parent="cDGHJ-dsKoAmQWKpD8uS-31" style="rounded=1;whiteSpace=wrap;html=1;fontSize=13;fontStyle=1;fillColor=#99FF99;" value="&lt;span&gt;&lt;span&gt;Current Control Subtask&lt;/span&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="85.71" width="105" x="132.5" y="57.14999999999998" as="geometry" />
+        </mxCell>
+        <mxCell id="cDGHJ-dsKoAmQWKpD8uS-28" parent="cDGHJ-dsKoAmQWKpD8uS-31" style="rounded=1;whiteSpace=wrap;html=1;fontSize=13;fontStyle=1;fillColor=#99FF99;" value="&lt;span&gt;&lt;span&gt;Revup Control subtask&lt;/span&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="85.71" width="105" x="242.5" y="57.14999999999998" as="geometry" />
+        </mxCell>
+        <mxCell id="cDGHJ-dsKoAmQWKpD8uS-29" parent="cDGHJ-dsKoAmQWKpD8uS-31" style="rounded=1;whiteSpace=wrap;html=1;fontSize=13;fontStyle=1;fillColor=#99FF99;" value="&lt;span&gt;&lt;span&gt;Observer subtask&lt;/span&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="85.71" width="105" x="352.5" y="57.14999999999998" as="geometry" />
+        </mxCell>
+        <mxCell id="cDGHJ-dsKoAmQWKpD8uS-30" parent="cDGHJ-dsKoAmQWKpD8uS-31" style="rounded=1;whiteSpace=wrap;html=1;fontSize=13;fontStyle=1;fillColor=#99FF99;" value="&lt;span&gt;&lt;span&gt;Modulation subtask&lt;/span&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="85.71" width="105" x="462.5" y="57.14999999999999" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

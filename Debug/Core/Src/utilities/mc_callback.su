@@ -1,4 +1,0 @@
-../Core/Src/utilities/mc_callback.c:5:6:mc_callback_init	16	static
-../Core/Src/utilities/mc_callback.c:11:6:mc_callback_execute	16	static
-../Core/Src/utilities/mc_callback.c:19:6:mc_callback_register_function	24	static
-../Core/Src/utilities/mc_callback.c:25:6:mc_callback_unregister_function	16	static

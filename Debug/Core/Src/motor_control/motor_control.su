@@ -1,3 +1,0 @@
-../Core/Src/motor_control/motor_control.c:9:13:init_builtin_led	32	static
-../Core/Src/motor_control/motor_control.c:20:13:init_user_button	32	static
-../Core/Src/motor_control/motor_control.c:32:6:motor_control_initializer	8	static

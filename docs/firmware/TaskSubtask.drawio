@@ -1,0 +1,74 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="q7wLy5D0CovXYSK_wcS2">
+    <mxGraphModel dx="1705" dy="922" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="zEqr7FOsAhMerJjr9tXK-1" edge="1" parent="1" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;strokeWidth=3;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points" />
+            <mxPoint x="45" y="520" as="sourcePoint" />
+            <mxPoint x="800" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zEqr7FOsAhMerJjr9tXK-19" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=8;fontStyle=1;fillColor=#66B2FF;" value="&lt;span&gt;&lt;span&gt;Telemetry subtask&lt;/span&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="32.14" width="70" x="50" y="532" as="geometry" />
+        </mxCell>
+        <mxCell id="zEqr7FOsAhMerJjr9tXK-20" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=8;fontStyle=1;fillColor=#66B2FF;" value="State-machine subtask" vertex="1">
+          <mxGeometry height="32.14" width="70" x="130" y="532" as="geometry" />
+        </mxCell>
+        <mxCell id="zEqr7FOsAhMerJjr9tXK-21" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=8;fontStyle=1;fillColor=#66B2FF;" value="Velocity measure subtask" vertex="1">
+          <mxGeometry height="32.14" width="70" x="210" y="532" as="geometry" />
+        </mxCell>
+        <mxCell id="zEqr7FOsAhMerJjr9tXK-22" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=8;fontStyle=1;fillColor=#66B2FF;" value="Velocity control subtask" vertex="1">
+          <mxGeometry height="32.14" width="70" x="290" y="532" as="geometry" />
+        </mxCell>
+        <mxCell id="zEqr7FOsAhMerJjr9tXK-24" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=8;fontStyle=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;span&gt;&lt;span&gt;Current transformation subtask&lt;/span&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="32.14" width="70" x="370" y="532" as="geometry" />
+        </mxCell>
+        <mxCell id="zEqr7FOsAhMerJjr9tXK-25" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=8;fontStyle=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Current control subtask" vertex="1">
+          <mxGeometry height="32.14" width="70" x="450" y="532" as="geometry" />
+        </mxCell>
+        <mxCell id="zEqr7FOsAhMerJjr9tXK-26" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=8;fontStyle=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Revup control subtask" vertex="1">
+          <mxGeometry height="32.14" width="70" x="530" y="532" as="geometry" />
+        </mxCell>
+        <mxCell id="zEqr7FOsAhMerJjr9tXK-27" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=8;fontStyle=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Observer subtask" vertex="1">
+          <mxGeometry height="32.14" width="70" x="610" y="532" as="geometry" />
+        </mxCell>
+        <mxCell id="zEqr7FOsAhMerJjr9tXK-28" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=8;fontStyle=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Modulation subtask" vertex="1">
+          <mxGeometry height="32.14" width="70" x="690" y="532" as="geometry" />
+        </mxCell>
+        <mxCell id="zEqr7FOsAhMerJjr9tXK-29" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="10000 us" vertex="1">
+          <mxGeometry height="30" width="60" x="55" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="zEqr7FOsAhMerJjr9tXK-30" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="250 us" vertex="1">
+          <mxGeometry height="30" width="60" x="135" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="zEqr7FOsAhMerJjr9tXK-31" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="250 us" vertex="1">
+          <mxGeometry height="30" width="60" x="215" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="zEqr7FOsAhMerJjr9tXK-32" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="250 us" vertex="1">
+          <mxGeometry height="30" width="60" x="295" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="zEqr7FOsAhMerJjr9tXK-33" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="125 us" vertex="1">
+          <mxGeometry height="30" width="60" x="375" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="zEqr7FOsAhMerJjr9tXK-34" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="125 us" vertex="1">
+          <mxGeometry height="30" width="60" x="460" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="zEqr7FOsAhMerJjr9tXK-35" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="62.5 us" vertex="1">
+          <mxGeometry height="30" width="60" x="535" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="zEqr7FOsAhMerJjr9tXK-36" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="62.5 us" vertex="1">
+          <mxGeometry height="30" width="60" x="615" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="zEqr7FOsAhMerJjr9tXK-37" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="62.5 us" vertex="1">
+          <mxGeometry height="30" width="60" x="700" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="zEqr7FOsAhMerJjr9tXK-38" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;Motor control subtask execution order and cycle times&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="40" width="525" x="40" y="440" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,188 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="HHKpbtH89FQ7xRHq3gS7">
+    <mxGraphModel dx="1705" dy="922" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-1" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;strokeColor=#3399FF;strokeWidth=3;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="220" y="280" />
+              <mxPoint x="400" y="160" />
+            </Array>
+            <mxPoint x="40" y="400" as="sourcePoint" />
+            <mxPoint x="800" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-3" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;strokeWidth=3;strokeColor=#3399FF;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="40" y="760" as="sourcePoint" />
+            <mxPoint x="800" y="600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-4" edge="1" parent="1" style="endArrow=classic;dashed=1;html=1;rounded=0;strokeWidth=2;endFill=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="40" y="400" as="sourcePoint" />
+            <mxPoint x="800" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-5" edge="1" parent="1" style="endArrow=classic;dashed=1;html=1;rounded=0;strokeWidth=2;endFill=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="40" y="760" as="sourcePoint" />
+            <mxPoint x="800" y="760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-6" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;rounded=0;strokeWidth=2;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="800" y="760" as="sourcePoint" />
+            <mxPoint x="800" y="600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-8" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;PWM- and motor control timer interaction:&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="40" width="440" x="40" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-9" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;0&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="60" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-11" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;Auto reload value&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="80" x="360" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-12" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;0&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="780" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-13" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;0&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="60" y="770" as="geometry" />
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-14" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;0&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="800" y="770" as="geometry" />
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-15" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;Auto reload value&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="80" x="760" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-16" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;rounded=0;strokeWidth=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="220" y="280" as="sourcePoint" />
+            <mxPoint x="220" y="760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-17" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;rounded=0;strokeWidth=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="600" y="280" as="sourcePoint" />
+            <mxPoint x="600" y="760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-18" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;CCR_2 value,&lt;/b&gt;&lt;div&gt;&lt;b&gt;75% of the pwm-cycle&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="100" x="600" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-19" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;CCR_1 value,&lt;/b&gt;&lt;div&gt;&lt;b&gt;25% of the pwm-cycle&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="100" x="110" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-21" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;rounded=0;strokeWidth=2;startArrow=classic;startFill=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="40" y="120" as="sourcePoint" />
+            <mxPoint x="40" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-22" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;rounded=0;strokeWidth=2;startArrow=classic;startFill=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="40" y="480" as="sourcePoint" />
+            <mxPoint x="40" y="760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-36" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Motor control task 1&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="75" width="220" x="40" y="840" as="geometry" />
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-37" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Motor control task 2&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="75" width="220" x="580" y="840" as="geometry" />
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-38" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="HNJWFcNqeJcXwlb8qtva-36" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="220" y="760" as="sourcePoint" />
+            <mxPoint x="610" y="540" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-40" connectable="0" parent="HNJWFcNqeJcXwlb8qtva-38" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;font style=&quot;font-size: 12px;&quot;&gt;&lt;b&gt;Execute&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.0497" y="-2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-39" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="HNJWFcNqeJcXwlb8qtva-37" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="600" y="760" as="sourcePoint" />
+            <mxPoint x="350" y="1000" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-41" connectable="0" parent="HNJWFcNqeJcXwlb8qtva-39" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;b style=&quot;font-size: 12px;&quot;&gt;Execute&lt;/b&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.0962" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-42" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;strokeWidth=2;strokeColor=#000099;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="600" y="440" as="sourcePoint" />
+            <mxPoint x="720" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-44" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;strokeWidth=2;strokeColor=#000099;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="600" y="520" as="sourcePoint" />
+            <mxPoint x="220" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-45" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;strokeWidth=2;strokeColor=#000099;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="600" y="520" as="sourcePoint" />
+            <mxPoint x="600" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-47" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;strokeWidth=2;strokeColor=#000099;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="100" y="440" as="sourcePoint" />
+            <mxPoint x="220" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-48" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;strokeWidth=2;strokeColor=#000099;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="220" y="520" as="sourcePoint" />
+            <mxPoint x="220" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-49" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;50% of the pwm-&amp;nbsp;&lt;/b&gt;&lt;div&gt;&lt;b&gt;cycle&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="100" x="290" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-50" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;strokeWidth=3;strokeColor=#3399FF;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="800" y="600" as="sourcePoint" />
+            <mxPoint x="800" y="760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-51" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;dashed=1;dashPattern=8 8;" value="&lt;b style=&quot;&quot;&gt;&lt;font&gt;3 shunt current&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;b style=&quot;&quot;&gt;&lt;font&gt;measurement&lt;/font&gt;&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="120" x="340" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-52" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;rounded=0;strokeWidth=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="400" y="160" as="sourcePoint" />
+            <mxPoint x="400" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-53" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" target="HNJWFcNqeJcXwlb8qtva-51" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="400" y="400" as="sourcePoint" />
+            <mxPoint x="890" y="880" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-54" connectable="0" parent="HNJWFcNqeJcXwlb8qtva-53" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;b style=&quot;font-size: 12px;&quot;&gt;Execute&lt;/b&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.0962" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-55" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;Generated center-aligned pwm-signal&lt;/b&gt;" vertex="1">
+          <mxGeometry height="40" width="120" x="720" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="HNJWFcNqeJcXwlb8qtva-56" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;The timer responsible for generating the center-aligned pwm-signal is configured a &quot;Master&quot;, while the motor control timer is configured as &quot;Slave&quot;. Accordingly, a highly accurate timer synchronization is achieved.&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="480" x="40" y="960" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

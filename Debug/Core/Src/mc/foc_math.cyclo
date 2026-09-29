@@ -1,3 +1,0 @@
-../Core/Src/mc/foc_math.c:4:6:clarke_transform	1
-../Core/Src/mc/foc_math.c:10:6:park_transform	1
-../Core/Src/mc/foc_math.c:16:6:inv_park_transform	1

@@ -1,3 +1,0 @@
-../Core/Src/utilities/lpf_butterworth.c:6:6:lpf_butterworth_init	40	static
-../Core/Src/utilities/lpf_butterworth.c:33:6:lpf_butterworth_process	24	static
-../Core/Src/utilities/lpf_butterworth.c:49:7:lpf_butterworth_get_value	24	static

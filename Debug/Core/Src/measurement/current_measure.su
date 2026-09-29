@@ -1,4 +1,0 @@
-../Core/Src/measurement/current_measure.c:10:21:calculate_current	32	static
-../Core/Src/measurement/current_measure.c:16:6:current_measure_init	16	static
-../Core/Src/measurement/current_measure.c:24:6:current_measure_process	40	static
-../Core/Src/measurement/current_measure.c:37:28:current_measure_get_currents	56	static
