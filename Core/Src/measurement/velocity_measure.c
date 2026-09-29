@@ -21,9 +21,9 @@ void velocity_measure_process(velocity_measure_t *const instance, float_t omega_
 	instance->rpm = lpf_first_order_get_filtered_value(instance->lpf_fo_instance);
 }
 
-float_t velocity_measure_get_rpm(velocity_measure_t *const instance)
+uint32_t velocity_measure_get_rpm(velocity_measure_t *const instance)
 {
-	float_t ret_val = instance->rpm;
+	uint32_t ret_val = (uint32_t)instance->rpm;
 	return ret_val;
 }
 

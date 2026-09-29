@@ -14,7 +14,6 @@ static sliding_mode_observer_t smo_instance = {0};
 
 void measurement_layer_initializer(void)
 {
-	uint32_t motor_max_rpm = motor_cfg_get_motor_max_rpm();
 	uint32_t motor_pole_pairs = motor_cfg_get_motor_pole_pairs();
 	uint32_t motor_kv_value = motor_cfg_get_motor_kv_value();
 	float_t motor_resistance = motor_cfg_get_motor_stator_resistance();
