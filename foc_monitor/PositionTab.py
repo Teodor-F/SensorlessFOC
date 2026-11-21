@@ -7,7 +7,7 @@ class PositionTab(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.plot = pg.PlotWidget(title="Electrical Angle")
+        self.plot = pg.PlotWidget(title="Electrical Angle (rad)")
         self.plot.setBackground("w")
         self.plot.showGrid(x=True, y=True, alpha=0.3)
         self.plot.addLegend()

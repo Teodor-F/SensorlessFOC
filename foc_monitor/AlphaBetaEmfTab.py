@@ -7,7 +7,7 @@ class AlphaBetaEmfTab(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.plot = pg.PlotWidget(title="Back‑EMF α / β (Time Domain)")
+        self.plot = pg.PlotWidget(title="Back‑EMF α/β (mV)")
         self.plot.setYRange(-3000, 3000, padding=0)
         self.plot.setBackground("w")
         self.plot.showGrid(x=True, y=True, alpha=0.3)
