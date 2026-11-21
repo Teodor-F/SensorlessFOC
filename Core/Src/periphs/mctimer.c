@@ -23,7 +23,6 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
 			mc_callback_execute(&(p_mc_timer->second_callback));
 		}
 	}
-
 }
 
 void TIM3_IRQHandler(void)

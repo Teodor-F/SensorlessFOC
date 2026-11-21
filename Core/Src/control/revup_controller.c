@@ -73,12 +73,12 @@ void revup_controller_process(revup_controller_t *const instance)
 			}
 			instance->theta_out += (instance->open_loop_omega * instance->sampling_time);
 			instance->theta_out = constrain_angle(instance->theta_out);
-			instance->id_out = instance->revup_cfg.aligment_id;
-			instance->iq_out = instance->revup_cfg.aligment_iq;
+			instance->id_out = instance->revup_cfg.open_loop_id;
+			instance->iq_out = instance->revup_cfg.open_loop_iq;
 			break;
 		}
 //========================================================================
-		// Spin the motor with the s
+		// Spin the motor in open-loop for predefined time to stabilize
 		case REVUP_CONTROLLER_STABILIZATION:
 		{
 

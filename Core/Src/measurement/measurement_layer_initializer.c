@@ -51,9 +51,9 @@ void measurement_layer_initializer(void)
 	sliding_mode_observer_cfg_t smo_cfg = {
 		.rs = motor_resistance,
 		.ls = motor_inductance,
-		.boundary = 175.0f,
-		.k_sliding_gain = 60.0f,
-		.g_emf_gain = 0.065f,
+		.boundary = 225.0f,
+		.k_sliding_gain = 75.0f,
+		.g_emf_gain = 0.085f,
 		.emf_cntr_threshold = 500u,
 		.emf_threshold = 500.0f,
 		.cycle_time = OBSERVER_CYCLE_TIME

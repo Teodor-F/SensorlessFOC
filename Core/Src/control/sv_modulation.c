@@ -48,7 +48,7 @@ void sv_modulation_process(sv_modulation_t *const instance, float_t electrical_a
 	float_t v_min = min_3(va, vb, vc);
 	float_t v_offs = ONE_BY_TWO * (v_max + v_min);
 
-	// Center the 3 phases around 0
+	// Center the 3 phases around 0, applying "common mode voltages"
 	va -= v_offs;
 	vb -= v_offs;
 	vc -= v_offs;
